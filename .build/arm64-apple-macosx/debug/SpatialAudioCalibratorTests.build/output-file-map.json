@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/master.swiftdeps"
+  },
+  "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Tests/SpatialAudioCalibratorTests/SweepGeneratorTests.swift": {
+    "dependencies": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.d",
+    "object": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.swift.o",
+    "swiftmodule": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.swiftdeps",
+    "diagnostics": "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.dia"
+  }
+}

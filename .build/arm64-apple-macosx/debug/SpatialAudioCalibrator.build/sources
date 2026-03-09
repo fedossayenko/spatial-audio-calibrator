@@ -1,0 +1,15 @@
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/App/SpatialAudioCalibratorApp.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/AudioCalibrator.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationError.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationState.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/DeconvolutionEngine.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/FFTProcessor.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/AudioEngine.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/SweepGenerator.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/HAL/AudioDeviceManager.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/AcousticParameters.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/CalibrationConfig.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/ImpulseResponse.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/SpeakerChannel.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/MathHelpers.swift
+/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/WAVEExporter.swift

@@ -1,0 +1,988 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.xctest/Contents/MacOS/SpatialAudioCalibratorPackageTests",
+      "packagePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator",
+      "productName" : "SpatialAudioCalibratorPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.SpatialAudioCalibrator-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/sources",
+      "importPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/App/SpatialAudioCalibratorApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/AudioCalibrator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/DeconvolutionEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/FFTProcessor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/AudioEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/SweepGenerator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/HAL/AudioDeviceManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/AcousticParameters.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/CalibrationConfig.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/ImpulseResponse.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/SpeakerChannel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/MathHelpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/WAVEExporter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "SpatialAudioCalibrator",
+      "moduleOutputPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibrator.swiftmodule",
+      "objects" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpatialAudioCalibratorApp.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioCalibrator.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationError.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationState.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/DeconvolutionEngine.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/FFTProcessor.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioEngine.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SweepGenerator.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioDeviceManager.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AcousticParameters.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationConfig.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/ImpulseResponse.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpeakerChannel.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/MathHelpers.swift.o",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/WAVEExporter.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "SpatialAudioCalibrator_main",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "spatial_audio_calibrator"
+      ],
+      "outputFileMapPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpatialAudioCalibratorApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioCalibrator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/DeconvolutionEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/FFTProcessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SweepGenerator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioDeviceManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AcousticParameters.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationConfig.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/ImpulseResponse.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpeakerChannel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/MathHelpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/WAVEExporter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibrator.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/App/SpatialAudioCalibratorApp.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/AudioCalibrator.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationError.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationState.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/DeconvolutionEngine.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/FFTProcessor.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/AudioEngine.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/SweepGenerator.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/HAL/AudioDeviceManager.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/AcousticParameters.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/CalibrationConfig.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/ImpulseResponse.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/SpeakerChannel.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/MathHelpers.swift",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/WAVEExporter.swift"
+      ],
+      "tempsPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SpatialAudioCalibratorPackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/sources",
+      "importPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibratorTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SpatialAudioCalibratorPackageTests",
+      "moduleOutputPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibratorPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/include/SpatialAudioCalibratorPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "spatial_audio_calibrator"
+      ],
+      "outputFileMapPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibratorPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SpatialAudioCalibratorTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/sources",
+      "importPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Tests/SpatialAudioCalibratorTests/SweepGeneratorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SpatialAudioCalibratorTests",
+      "moduleOutputPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibratorTests.swiftmodule",
+      "objects" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "spatial_audio_calibrator"
+      ],
+      "outputFileMapPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules/SpatialAudioCalibratorTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Tests/SpatialAudioCalibratorTests/SweepGeneratorTests.swift"
+      ],
+      "tempsPath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "SpatialAudioCalibrator" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SpatialAudioCalibrator",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-c",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/App/SpatialAudioCalibratorApp.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/AudioCalibrator.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationError.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationState.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/DeconvolutionEngine.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/FFTProcessor.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/AudioEngine.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/SweepGenerator.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/HAL/AudioDeviceManager.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/AcousticParameters.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/CalibrationConfig.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/ImpulseResponse.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/SpeakerChannel.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/MathHelpers.swift",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/WAVEExporter.swift",
+      "-I",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "SpatialAudioCalibrator_main",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SpatialAudioCalibratorPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SpatialAudioCalibratorPackageTests",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-c",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/include/SpatialAudioCalibratorPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SpatialAudioCalibratorTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SpatialAudioCalibratorTests",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-c",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Tests/SpatialAudioCalibratorTests/SweepGeneratorTests.swift",
+      "-I",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "spatial_audio_calibrator",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "SpatialAudioCalibrator" : [
+
+    ],
+    "SpatialAudioCalibratorPackageTests" : [
+      "SpatialAudioCalibratorTests",
+      "SpatialAudioCalibrator"
+    ],
+    "SpatialAudioCalibratorTests" : [
+      "SpatialAudioCalibrator"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator-entitlement.plist" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<entitlement-plist>"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<com.apple.security.get-task-allow>"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator-entitlement.plist"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/App/SpatialAudioCalibratorApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/AudioCalibrator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Core/CalibrationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/DeconvolutionEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/DSP/FFTProcessor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/AudioEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Engine/SweepGenerator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/HAL/AudioDeviceManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/AcousticParameters.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/CalibrationConfig.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/ImpulseResponse.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Models/SpeakerChannel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/MathHelpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Sources/SpatialAudioCalibrator/Utils/WAVEExporter.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/sources"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AcousticParameters.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioCalibrator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioDeviceManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationConfig.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/DeconvolutionEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/FFTProcessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/ImpulseResponse.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/MathHelpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpatialAudioCalibratorApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpeakerChannel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SweepGenerator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/WAVEExporter.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.product/Objects.LinkFileList"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/sources"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AcousticParameters.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioCalibrator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioDeviceManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/AudioEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationConfig.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/CalibrationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/DeconvolutionEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/FFTProcessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/ImpulseResponse.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/MathHelpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpatialAudioCalibratorApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SpeakerChannel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/SweepGenerator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibrator.build/WAVEExporter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/SweepGeneratorTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/Tests/SpatialAudioCalibratorTests/SweepGeneratorTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/SpatialAudioCalibratorTests.build/sources"
+    },
+    "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/fedirsaienko/IdeaProjects/side/spatial-audio-calibrator/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
