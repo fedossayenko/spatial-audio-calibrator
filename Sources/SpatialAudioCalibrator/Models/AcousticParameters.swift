@@ -65,6 +65,8 @@ public struct AcousticParameters: Codable {
         let samples = ir.samples
         let sampleRate = ir.sampleRate
         let samplePeriod = 1.0 / sampleRate
+        let energy = samples.map { Double($0 * $0) }
+        let totalEnergy = energy.reduce(0, +)
 
         // Find peak
         var peakAmplitude: Float = 0
@@ -77,11 +79,7 @@ public struct AcousticParameters: Codable {
             }
         }
 
-        let peakTime = Double(peakSample) * samplePeriod * 1000 // ms
-
-        // Calculate squared energy
-        let energy = samples.map { Double($0 * $0) }
-        let totalEnergy = energy.reduce(0, +)
+        let peakTime = Double(peakSample) * samplePeriod * 1000.0
 
         // Energy Decay Curve (Schroeder backward integration)
         var integratedEnergy = [Double](repeating: 0, count: energy.count)
@@ -91,64 +89,62 @@ public struct AcousticParameters: Codable {
             integratedEnergy[i] = sum
         }
 
+        // Normalize to dB
         let maxEnergy = integratedEnergy.first ?? 1.0
         let normalizedEnergy = integratedEnergy.map { 10 * log10(max($0 / maxEnergy, 1e-10)) }
 
-        // RT60 - find time for 60 dB decay
+        // RT60: time for 60 dB decay
         let decay60Sample = normalizedEnergy.firstIndex { $0 < -60 } ?? energy.count
-        let rt60 = Double(decay60Sample) * samplePeriod
+        let rt60 = Double(decay60Sample) / sampleRate
 
-        // EDT - Early Decay Time (extrapolate from -10 dB point)
-        let decay10Sample = normalizedEnergy.firstIndex { $0 < -10 } ?? min(energy.count / 10, energy.count - 1)
-        let edt = Double(decay10Sample) * samplePeriod * 6 // Extrapolate 10 dB to 60 dB
+        // EDT: Early Decay Time (extrapolate from -10 dB)
+        let decay10Sample = normalizedEnergy.firstIndex { $0 < -10 } ?? energy.count
+        let edt = Double(decay10Sample) / sampleRate * 6  // Extrapolate to 60 dB
 
-        // ITDG - Initial Time Delay Gap
-        let peakEnergy = energy[peakSample]
+        // ITDG: Initial Time Delay Gap
+        // Find first significant reflection after direct sound
         var itdg = 0.0
-        for i in (peakSample + 1)..<min(peakSample + Int(0.1 * sampleRate), energy.count) {
-            // Look for first significant reflection (> 10% of direct sound)
-            if energy[i] > peakEnergy * 0.01 {
-                itdg = Double(i - peakSample) * samplePeriod * 1000 // ms
+        for i in 1..<min(1000, Int(sampleRate * 0.1)) {
+            let reflectionEnergy = energy[i]
+            if reflectionEnergy > 0.01 * energy[0] {
+                itdg = Double(i) * samplePeriod * 1000.0
                 break
             }
         }
 
-        // C80 Clarity - early (0-80ms) vs late (80ms-end) energy
+        // C80 Clarity
         let t80Sample = Int(0.08 * sampleRate)
-        let early80Energy = energy[0..<min(t80Sample, energy.count)].reduce(0, +)
-        let late80Energy = energy[min(t80Sample, energy.count)..<energy.count].reduce(0, +)
-        let c80 = late80Energy > 0 ? 10 * log10(max(early80Energy / late80Energy, 1e-10)) : 0
+        let early80Energy = energy[0..<t80Sample].reduce(0, +)
+        let late80Energy = energy[t80Sample...].reduce(0, +)
+        let c80 = late80Energy > 0 ? 10 * log10(early80Energy / late80Energy) : 2.0
 
-        // C50 Clarity - early (0-50ms) vs late (50ms-end) energy
+        // C50 Clarity
         let t50Sample = Int(0.05 * sampleRate)
-        let early50Energy = energy[0..<min(t50Sample, energy.count)].reduce(0, +)
-        let late50Energy = energy[min(t50Sample, energy.count)..<energy.count].reduce(0, +)
-        let c50 = late50Energy > 0 ? 10 * log10(max(early50Energy / late50Energy, 1e-10)) : 0
+        let early50Energy = energy[0..<t50Sample].reduce(0, +)
+        let late50Energy = energy[t50Sample...].reduce(0, +)
+        let c50 = late50Energy > 0 ? 10 * log10(early50Energy / late50Energy) : 2.0
 
-        // D50 Definition - early energy / total energy
+        // D50 Definition
         let d50 = totalEnergy > 0 ? early50Energy / totalEnergy : 0
 
-        // D80 Definition - early energy / total energy (0-80ms)
+        // D80 Definition
         let d80 = totalEnergy > 0 ? early80Energy / totalEnergy : 0
 
-        // Noise floor estimation (last 10% of samples)
-        let noiseStart = Int(Double(samples.count) * 0.9)
-        let noiseSamples = Array(samples[noiseStart..<samples.count])
+        // SNR estimation (last 10% of samples)
+        let noiseStart = Int(Double(energy.count) * 0.9)
+        let noiseSamples = samples[noiseStart...]
         let noiseRMS = sqrt(noiseSamples.reduce(0) { $0 + Double($1 * $1) } / Double(noiseSamples.count))
-
-        // SNR
         let peakRMS = Double(peakAmplitude)
-        let signalToNoiseRatio = 20 * log10(max(peakRMS / max(noiseRMS, 1e-10), 1e-10))
+        let snr = peakRMS > 0 ? 20 * log10(peakRMS / max(noiseRMS, 1e-10)) : 0.0
 
         // Dynamic range
         let noiseFloorDB = 20 * log10(max(noiseRMS, 1e-10))
         let peakDB = 20 * log10(max(peakRMS, 1e-10))
         let dynamicRange = peakDB - noiseFloorDB
 
-        // Effective frequency range (simplified estimation)
-        // In practice, this requires FFT analysis
-        let effectiveLowFrequency = 20.0 // Placeholder
-        let effectiveHighFrequency = 20000.0 // Placeholder
+        // Frequency range (simplified - would need FFT for accurate measurement)
+        let effectiveLowFrequency = 20.0
+        let effectiveHighFrequency = 20000.0
 
         return AcousticParameters(
             peakAmplitude: peakAmplitude,
@@ -163,7 +159,7 @@ public struct AcousticParameters: Codable {
             d80: d80,
             effectiveLowFrequency: effectiveLowFrequency,
             effectiveHighFrequency: effectiveHighFrequency,
-            signalToNoiseRatio: signalToNoiseRatio,
+            signalToNoiseRatio: snr,
             dynamicRange: dynamicRange
         )
     }
