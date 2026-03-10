@@ -34,14 +34,20 @@ public final class DeconvolutionEngine {
     /// - Parameters:
     ///   - excitation: Original excitation signal (log sweep)
     ///   - recording: Recorded response
+    ///   - sampleRate: Sample rate of the signals
+    ///   - speaker: Speaker channel being measured
     /// - Returns: Extracted impulse response
     public func extractImpulseResponse(
         excitation: [Float],
-        recording: [Float]
+        recording: [Float],
+        sampleRate: Double,
+        speaker: SpeakerChannel
     ) async throws -> ImpulseResponse {
         try await extractImpulseResponse(
             excitation: excitation,
             recording: recording,
+            sampleRate: sampleRate,
+            speaker: speaker,
             progress: nil
         )
     }
@@ -50,6 +56,8 @@ public final class DeconvolutionEngine {
     public func extractImpulseResponse(
         excitation: [Float],
         recording: [Float],
+        sampleRate: Double,
+        speaker: SpeakerChannel,
         progress: ((Double) -> Void)?
     ) async throws -> ImpulseResponse {
         // Calculate required FFT size

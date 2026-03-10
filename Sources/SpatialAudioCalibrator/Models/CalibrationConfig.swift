@@ -150,7 +150,7 @@ public struct CalibrationConfig: Codable {
     }
 
     private func isPowerOfTwo(_ n: Int) -> Bool {
-        n > 0 && (n & (n - 1)) == 0
+        MathHelpers.isPowerOf2(n)
     }
 }
 
@@ -168,9 +168,9 @@ public enum ConfigValidationError: Error, LocalizedError {
         switch self {
         case .invalidStartFrequency(let freq):
             return "Start frequency must be positive (got \(freq) Hz)"
-        case .invalidFrequencyRange(let start, let end):
+        case let .invalidFrequencyRange(start, end):
             return "End frequency (\(end) Hz) must be greater than start frequency (\(start) Hz)"
-        case .endFrequencyExceedsNyquist(let freq, let nyquist):
+        case let .endFrequencyExceedsNyquist(freq, nyquist):
             return "End frequency (\(freq) Hz) exceeds Nyquist frequency (\(nyquist) Hz)"
         case .invalidSweepDuration(let duration):
             return "Sweep duration must be positive (got \(duration) seconds)"

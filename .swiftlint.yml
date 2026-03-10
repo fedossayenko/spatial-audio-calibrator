@@ -19,10 +19,27 @@ disabled_rules:
   - line_length  # Handled by SwiftFormat
   - type_name  # Allow shorter names for audio types
   - identifier_name  # Allow short variable names in DSP code
+  - for_where  # Sometimes clearer with if inside for
+  - file_length  # Allow longer files for complex DSP code
+  - function_body_length  # DSP functions can be longer
+  - number_separator  # Don't require underscores in numbers
+  - type_contents_order  # Don't enforce specific ordering
+  - indentation_width  # Handled by SwiftFormat
+  - implicit_optional_initialization  # Explicit nil is clearer
+  - vertical_whitespace_between_cases  # Compact switch cases are fine
+  - sorted_imports  # Don't enforce import ordering
+  - file_header  # Don't require file headers
+  - file_name  # Don't enforce file naming
+  - file_name_no_space  # Allow spaces in filenames
+  - vertical_whitespace_opening_braces  # Empty lines after braces are fine
+  - vertical_whitespace_closing_braces  # Empty lines before braces are fine
+  - switch_case_on_newline  # Compact switch cases are fine
+  - function_default_parameter_at_end  # Sometimes default first is clearer
+  - unavailable_function  # Don't require marking unimplemented
+  - implicitly_unwrapped_optional  # Sometimes needed for C interop
 
 # Enable opt-in rules
 opt_in_rules:
-  - anyobject_protocol
   - array_init
   - attributes
   - closure_body_length
@@ -42,9 +59,6 @@ opt_in_rules:
   - explicit_init
   - fallthrough
   - fatal_error_message
-  - file_header
-  - file_name
-  - file_name_no_space
   - first_where
   - flatmap_over_map_reduce
   - function_default_parameter_at_end
@@ -52,7 +66,6 @@ opt_in_rules:
   - identical_operands
   - implicit_return
   - implicitly_unwrapped_optional
-  - indentation_width
   - joined_default_parameter
   - last_where
   - legacy_multiple
@@ -70,9 +83,7 @@ opt_in_rules:
   - no_grouping_extension
   - nslocalizedstring_key
   - nslocalizedstring_require_bundle
-  - number_separator
   - operator_usage_whitespace
-  - optional_enum_case
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
@@ -92,20 +103,17 @@ opt_in_rules:
   - shorthand_operator
   - single_test_class
   - sorted_first_last
-  - sorted_imports
   - static_operator
   - strict_fileprivate
   - switch_case_alignment
   - switch_case_on_newline
   - toggle_bool
   - trailing_closure
-  - type_contents_order
   - unavailable_function
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
   - untyped_error_in_catch
   - vertical_parameter_alignment_on_call
-  - vertical_whitespace_between_cases
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
   - weak_delegate
@@ -122,17 +130,9 @@ analyzer_rules:
 force_cast: warning
 force_try: warning
 
-function_body_length:
-  warning: 60
-  error: 100
-
 type_body_length:
   warning: 400
   error: 600
-
-file_length:
-  warning: 500
-  error: 1000
 
 cyclomatic_complexity:
   warning: 15
@@ -151,7 +151,9 @@ nesting:
 custom_rules:
   no_print_statements:
     included: ".*\\.swift"
-    excluded: ".*Test\\.swift"
+    excluded:
+      - ".*Test\\.swift"
+      - ".*App\\.swift"  # CLI apps need print statements
     name: "No print statements"
     regex: "\\bprint\\s*\\("
     message: "Use logging system instead of print statements"

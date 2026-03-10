@@ -97,7 +97,8 @@ jobs:
     name: Dead Code Detection
     runs-on: macos-14
     timeout-minutes: 15
-    continue-on-error: true  # Don't fail the build for now
+    # Disabled due to crash (exit code 139) - re-enable when Periphery is stable
+    if: false
 
     steps:
       - name: Checkout

@@ -2,7 +2,6 @@ import Foundation
 
 /// Mathematical helper functions for audio processing
 public enum MathHelpers {
-
     /// Calculate the next power of 2 greater than or equal to n
     public static func nextPowerOf2(_ n: Int) -> Int {
         guard n > 0 else { return 1 }

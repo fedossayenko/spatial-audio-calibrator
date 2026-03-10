@@ -41,11 +41,11 @@ public enum CalibrationState: Equatable {
              (.ready, .ready),
              (.completed, .completed):
             return true
-        case (.measuring(let l), .measuring(let r)):
+        case let (.measuring(l), .measuring(r)):
             return l == r
-        case (.processing(let l), .processing(let r)):
+        case let (.processing(l), .processing(r)):
             return l == r
-        case (.error(let l), .error(let r)):
+        case let (.error(l), .error(r)):
             return l.errorDescription == r.errorDescription
         default:
             return false

@@ -75,11 +75,11 @@ public enum CalibrationError: Error, LocalizedError, Codable {
             return "No signal detected from \(speaker.displayName). Check speaker connection and volume."
         case .clipping(let speaker):
             return "Signal clipped on \(speaker.displayName). Reduce output volume and try again."
-        case .lowSNR(let speaker, let snr):
+        case let .lowSNR(speaker, snr):
             return "Signal-to-noise ratio too low on \(speaker.displayName) (\(String(format: "%.1f", snr)) dB). Reduce ambient noise or increase volume."
         case .invalidTiming(let speaker):
             return "Invalid timing detected for \(speaker.displayName). Check latency compensation."
-        case .abnormalRT60(let speaker, let rt60):
+        case let .abnormalRT60(speaker, rt60):
             return "Abnormal reverberation time (\(String(format: "%.2f", rt60))s) for \(speaker.displayName). Check room acoustics."
         }
     }
@@ -108,6 +108,7 @@ public enum CalibrationError: Error, LocalizedError, Codable {
         case details
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(String.self, forKey: .type)
@@ -214,13 +215,13 @@ public enum CalibrationError: Error, LocalizedError, Codable {
         case .clipping(let speaker):
             try container.encode("clipping", forKey: .type)
             try container.encode(speaker.rawValue, forKey: .details)
-        case .lowSNR(let speaker, let snr):
+        case let .lowSNR(speaker, snr):
             try container.encode("lowSNR", forKey: .type)
             try container.encode("\(speaker.rawValue),\(snr)", forKey: .details)
         case .invalidTiming(let speaker):
             try container.encode("invalidTiming", forKey: .type)
             try container.encode(speaker.rawValue, forKey: .details)
-        case .abnormalRT60(let speaker, let rt60):
+        case let .abnormalRT60(speaker, rt60):
             try container.encode("abnormalRT60", forKey: .type)
             try container.encode("\(speaker.rawValue),\(rt60)", forKey: .details)
         }

@@ -418,6 +418,7 @@ public enum AudioDeviceManager {
 
     private static func logError(_ message: String) {
         #if DEBUG
+        // swiftlint:disable:next no_print_statements
         print("[AudioDeviceManager] \(message)")
         #endif
     }

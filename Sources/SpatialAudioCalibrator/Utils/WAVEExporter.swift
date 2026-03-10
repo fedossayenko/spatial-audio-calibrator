@@ -1,8 +1,10 @@
 import Foundation
 
+import Accelerate
+import AVFAudio
+
 /// Exports audio samples as WAV files.
 public enum WAVEExporter {
-
     /// Export audio samples as a 32-bit float WAV file
     public static func export(samples: [Float], sampleRate: Double, to url: URL) throws {
         let fileManager = FileManager.default
@@ -52,12 +54,5 @@ public enum WAVEExporter {
         }
 
         return data
-    }
-}
-
-// Helper extension for unsafe bytes
-private extension Array where Element == UInt8 {
-    init<T>(withUnsafeBytesOf value: T) where T: FixedWidthInteger {
-        self = Swift.withUnsafeBytes(of: value) { Array($0) }
     }
 }

@@ -151,6 +151,7 @@ public final class AudioEngine {
         // Configure device for 5.1 output
         if !AudioDeviceManager.configure51Surround(deviceID) {
             // Not critical - some devices don't support this
+            // swiftlint:disable:next no_print_statements
             print("Warning: Could not set 5.1 channel layout on device")
         }
     }

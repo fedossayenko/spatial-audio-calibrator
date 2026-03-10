@@ -11,7 +11,6 @@ import Foundation
 /// - Results aggregation and export
 @MainActor
 public final class AudioCalibrator: ObservableObject {
-
     // MARK: - Published Properties
 
     /// Current calibration state
@@ -82,8 +81,7 @@ public final class AudioCalibrator: ObservableObject {
             // Get latency info
             var latencySamples: UInt32 = 0
             var latencyMs: Double = 0
-            if let deviceID = outputDeviceID,
-               let bufferConfig = AudioDeviceManager.getBufferConfiguration(deviceID) {
+            if let deviceID = outputDeviceID, let bufferConfig = AudioDeviceManager.getBufferConfiguration(deviceID) {
                 latencySamples = bufferConfig.totalLatency
                 latencyMs = bufferConfig.latencyMs(at: config.sampleRate)
             }
@@ -159,8 +157,7 @@ public final class AudioCalibrator: ObservableObject {
         state = .initializing
 
         // Find output device
-        guard let deviceID = AudioDeviceManager.findHDMIDevice() ??
-                              AudioDeviceManager.getDefaultOutputDevice() else {
+        guard let deviceID = AudioDeviceManager.findHDMIDevice() ?? AudioDeviceManager.getDefaultOutputDevice() else {
             throw CalibrationError.noHDMIDevice
         }
 
@@ -212,17 +209,18 @@ public final class AudioCalibrator: ObservableObject {
         let impulseResponse = try await deconvolutionEngine.extractImpulseResponse(
             excitation: excitation,
             recording: compensatedRecording,
-            progress: { [weak self] p in
-                Task { @MainActor [weak self] in
-                    self?.progress = CalibrationProgress(
-                        currentSpeakerIndex: self?.progress?.currentSpeakerIndex ?? 0,
-                        totalSpeakers: SpeakerChannel.allCases.count,
-                        currentSpeaker: speaker,
-                        measurementProgress: p
-                    )
-                }
+            sampleRate: config.sampleRate,
+            speaker: speaker
+        ) { [weak self] p in
+            Task { @MainActor [weak self] in
+                self?.progress = CalibrationProgress(
+                    currentSpeakerIndex: self?.progress?.currentSpeakerIndex ?? 0,
+                    totalSpeakers: SpeakerChannel.allCases.count,
+                    currentSpeaker: speaker,
+                    measurementProgress: p
+                )
             }
-        )
+        }
 
         // Create measurement result
         let measurement = SpeakerMeasurement(
@@ -274,8 +272,8 @@ public final class AudioCalibrator: ObservableObject {
         encoder.dateEncodingStrategy = .iso8601
 
         // Create serializable analysis data
-        let analysisDict = measurements.map { measurement -> [String: Any] in
-            return [
+        let analysisDict = measurements.map { measurement in
+            [
                 "speaker": measurement.speaker.shortName,
                 "peakAmplitude": Double(measurement.analysis.peakAmplitude),
                 "peakTime": measurement.analysis.peakTime,
