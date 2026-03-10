@@ -107,23 +107,33 @@ public enum AudioDeviceManager {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var size = UInt32(MemoryLayout<UnsafeMutableRawPointer>.size)
-        var namePtr: UnsafeMutableRawPointer?
+        // First, get the size of the property
+        var size: UInt32 = 0
+        var status = AudioObjectGetPropertyDataSize(
+            deviceID,
+            &propertyAddress,
+            0,
+            nil,
+            &size
+        )
 
-        let status = withUnsafeMutablePointer(to: &namePtr) { ptr in
-            AudioObjectGetPropertyData(
-                deviceID,
-                &propertyAddress,
-                0,
-                nil,
-                &size,
-                ptr
-            )
-        }
+        guard status == noErr else { return nil }
 
-        guard status == noErr, let rawPtr = namePtr else { return nil }
-        let cfString = Unmanaged<CFString>.fromOpaque(rawPtr).takeUnretainedValue()
-        return cfString as String
+        // Allocate buffer and get the property data
+        let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: Int(size))
+        defer { buffer.deallocate() }
+
+        status = AudioObjectGetPropertyData(
+            deviceID,
+            &propertyAddress,
+            0,
+            nil,
+            &size,
+            buffer
+        )
+
+        guard status == noErr else { return nil }
+        return String(cString: buffer)
     }
 
     /// Get device unique identifier
@@ -134,23 +144,33 @@ public enum AudioDeviceManager {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var size = UInt32(MemoryLayout<UnsafeMutableRawPointer>.size)
-        var uidPtr: UnsafeMutableRawPointer?
+        // First, get the size of the property
+        var size: UInt32 = 0
+        var status = AudioObjectGetPropertyDataSize(
+            deviceID,
+            &propertyAddress,
+            0,
+            nil,
+            &size
+        )
 
-        let status = withUnsafeMutablePointer(to: &uidPtr) { ptr in
-            AudioObjectGetPropertyData(
-                deviceID,
-                &propertyAddress,
-                0,
-                nil,
-                &size,
-                ptr
-            )
-        }
+        guard status == noErr else { return nil }
 
-        guard status == noErr, let rawPtr = uidPtr else { return nil }
-        let cfString = Unmanaged<CFString>.fromOpaque(rawPtr).takeUnretainedValue()
-        return cfString as String
+        // Allocate buffer and get the property data
+        let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: Int(size))
+        defer { buffer.deallocate() }
+
+        status = AudioObjectGetPropertyData(
+            deviceID,
+            &propertyAddress,
+            0,
+            nil,
+            &size,
+            buffer
+        )
+
+        guard status == noErr else { return nil }
+        return String(cString: buffer)
     }
 
     /// Get transport type (HDMI, USB, Built-in, etc.)
