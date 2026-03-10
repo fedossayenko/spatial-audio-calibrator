@@ -7,7 +7,7 @@ import CoreAudio
 /// - Channel 2: Center
 /// - Channel 3: LFE (subwoofer)
 /// - Channels 4-5: Rear left/right (surround)
-public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable {
+public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable, Sendable {
     case frontLeft = 0
     case frontRight = 1
     case center = 2
@@ -15,41 +15,50 @@ public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable {
     case rearLeft = 4
     case rearRight = 5
 
-    public var id: Int { rawValue }
+    // MARK: Public
+
+    /// Typical measurement order (front to back)
+    public static var measurementOrder: [SpeakerChannel] {
+        [.frontLeft, .frontRight, .center, .lfe, .rearLeft, .rearRight]
+    }
+
+    public var id: Int {
+        rawValue
+    }
 
     /// Human-readable display name for UI
     public var displayName: String {
         switch self {
-        case .frontLeft: return "Front Left"
-        case .frontRight: return "Front Right"
-        case .center: return "Center / Up-firing"
-        case .lfe: return "Subwoofer (LFE)"
-        case .rearLeft: return "Rear Left"
-        case .rearRight: return "Rear Right"
+        case .frontLeft: "Front Left"
+        case .frontRight: "Front Right"
+        case .center: "Center / Up-firing"
+        case .lfe: "Subwoofer (LFE)"
+        case .rearLeft: "Rear Left"
+        case .rearRight: "Rear Right"
         }
     }
 
     /// Short abbreviation for compact display
     public var shortName: String {
         switch self {
-        case .frontLeft: return "FL"
-        case .frontRight: return "FR"
-        case .center: return "C"
-        case .lfe: return "LFE"
-        case .rearLeft: return "RL"
-        case .rearRight: return "RR"
+        case .frontLeft: "FL"
+        case .frontRight: "FR"
+        case .center: "C"
+        case .lfe: "LFE"
+        case .rearLeft: "RL"
+        case .rearRight: "RR"
         }
     }
 
     /// Core Audio channel label for this speaker
     public var coreAudioLabel: AudioChannelLabel {
         switch self {
-        case .frontLeft: return kAudioChannelLabel_Left
-        case .frontRight: return kAudioChannelLabel_Right
-        case .center: return kAudioChannelLabel_Center
-        case .lfe: return kAudioChannelLabel_LFEScreen
-        case .rearLeft: return kAudioChannelLabel_LeftSurround
-        case .rearRight: return kAudioChannelLabel_RightSurround
+        case .frontLeft: kAudioChannelLabel_Left
+        case .frontRight: kAudioChannelLabel_Right
+        case .center: kAudioChannelLabel_Center
+        case .lfe: kAudioChannelLabel_LFEScreen
+        case .rearLeft: kAudioChannelLabel_LeftSurround
+        case .rearRight: kAudioChannelLabel_RightSurround
         }
     }
 
@@ -57,24 +66,19 @@ public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable {
     public var group: SpeakerGroup {
         switch self {
         case .frontLeft, .frontRight:
-            return .frontStereo
+            .frontStereo
         case .center:
-            return .center
+            .center
         case .lfe:
-            return .subwoofer
+            .subwoofer
         case .rearLeft, .rearRight:
-            return .rearSurround
+            .rearSurround
         }
-    }
-
-    /// Typical measurement order (front to back)
-    public static var measurementOrder: [SpeakerChannel] {
-        [.frontLeft, .frontRight, .center, .lfe, .rearLeft, .rearRight]
     }
 }
 
 /// Speaker group classification
-public enum SpeakerGroup: String, CaseIterable, Codable {
+public enum SpeakerGroup: String, CaseIterable, Codable, Sendable {
     case frontStereo = "Front Stereo"
     case center = "Center"
     case subwoofer = "Subwoofer"

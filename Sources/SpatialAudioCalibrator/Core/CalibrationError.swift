@@ -1,7 +1,7 @@
 import Foundation
 
 /// Errors that can occur during the calibration process.
-public enum CalibrationError: Error, LocalizedError, Codable {
+public enum CalibrationError: Error, LocalizedError, Codable, Equatable {
     /// No HDMI audio device found
     case noHDMIDevice
 
@@ -47,67 +47,9 @@ public enum CalibrationError: Error, LocalizedError, Codable {
     /// Abnormal reverberation time
     case abnormalRT60(SpeakerChannel, Double)
 
-    // MARK: - LocalizedError
+    // MARK: Lifecycle
 
-    public var errorDescription: String? {
-        switch self {
-        case .noHDMIDevice:
-            return "No HDMI audio device found. Please connect your HDMI audio device and ensure it's selected in System Settings > Sound."
-        case .unsupportedFormat(let details):
-            return "Unsupported audio format: \(details)"
-        case .configurationFailed(let reason):
-            return "Failed to configure audio: \(reason)"
-        case .measurementFailed(let reason):
-            return "Measurement failed: \(reason)"
-        case .processingFailed(let reason):
-            return "Signal processing failed: \(reason)"
-        case .exportFailed(let reason):
-            return "Export failed: \(reason)"
-        case .permissionDenied:
-            return "Permission denied. Please grant microphone access in System Settings > Privacy & Security > Microphone."
-        case .deviceBusy:
-            return "Audio device is busy. Please close other audio applications and try again."
-        case .engineNotRunning:
-            return "Audio engine is not running. Please restart calibration."
-        case .noMicrophoneAccess:
-            return "Microphone access not available. Please check System Settings > Privacy & Security > Microphone."
-        case .noSignal(let speaker):
-            return "No signal detected from \(speaker.displayName). Check speaker connection and volume."
-        case .clipping(let speaker):
-            return "Signal clipped on \(speaker.displayName). Reduce output volume and try again."
-        case .lowSNR(let speaker, let snr):
-            return "Signal-to-noise ratio too low on \(speaker.displayName) (\(String(format: "%.1f", snr)) dB). Reduce ambient noise or increase volume."
-        case .invalidTiming(let speaker):
-            return "Invalid timing detected for \(speaker.displayName). Check latency compensation."
-        case .abnormalRT60(let speaker, let rt60):
-            return "Abnormal reverberation time (\(String(format: "%.2f", rt60))s) for \(speaker.displayName). Check room acoustics."
-        }
-    }
-
-    public var recoverySuggestion: String? {
-        switch self {
-        case .noHDMIDevice:
-            return "Connect HDMI cable and check Audio MIDI Setup for device configuration."
-        case .permissionDenied, .noMicrophoneAccess:
-            return "Open System Settings > Privacy & Security > Microphone and enable access for this application."
-        case .deviceBusy:
-            return "Close all audio applications (music players, video editors, etc.) and restart calibration."
-        case .clipping:
-            return "Lower the output volume in calibration settings and retry."
-        case .lowSNR:
-            return "Ensure quiet environment, increase output volume, or check microphone position."
-        default:
-            return nil
-        }
-    }
-
-    // MARK: - Codable
-
-    enum CodingKeys: String, CodingKey {
-        case type
-        case details
-    }
-
+    // swiftlint:disable:next cyclomatic_complexity
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(String.self, forKey: .type)
@@ -141,37 +83,61 @@ public enum CalibrationError: Error, LocalizedError, Codable {
         case "noSignal":
             let rawValue = try container.decode(Int.self, forKey: .details)
             guard let speaker = SpeakerChannel(rawValue: rawValue) else {
-                throw DecodingError.dataCorruptedError(forKey: .details, in: container, debugDescription: "Invalid speaker channel")
+                throw DecodingError.dataCorruptedError(
+                    forKey: .details,
+                    in: container,
+                    debugDescription: "Invalid speaker channel"
+                )
             }
             self = .noSignal(speaker)
         case "clipping":
             let rawValue = try container.decode(Int.self, forKey: .details)
             guard let speaker = SpeakerChannel(rawValue: rawValue) else {
-                throw DecodingError.dataCorruptedError(forKey: .details, in: container, debugDescription: "Invalid speaker channel")
+                throw DecodingError.dataCorruptedError(
+                    forKey: .details,
+                    in: container,
+                    debugDescription: "Invalid speaker channel"
+                )
             }
             self = .clipping(speaker)
         case "lowSNR":
             let parts = try container.decode(String.self, forKey: .details).split(separator: ",")
-            guard parts.count == 2,
-                  let rawValue = Int(parts[0]),
-                  let speaker = SpeakerChannel(rawValue: rawValue),
-                  let snr = Float(parts[1]) else {
-                throw DecodingError.dataCorruptedError(forKey: .details, in: container, debugDescription: "Invalid lowSNR format")
+            guard
+                parts.count == 2,
+                let rawValue = Int(parts[0]),
+                let speaker = SpeakerChannel(rawValue: rawValue),
+                let snr = Float(parts[1])
+            else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .details,
+                    in: container,
+                    debugDescription: "Invalid lowSNR format"
+                )
             }
             self = .lowSNR(speaker, snr)
         case "invalidTiming":
             let rawValue = try container.decode(Int.self, forKey: .details)
             guard let speaker = SpeakerChannel(rawValue: rawValue) else {
-                throw DecodingError.dataCorruptedError(forKey: .details, in: container, debugDescription: "Invalid speaker channel")
+                throw DecodingError.dataCorruptedError(
+                    forKey: .details,
+                    in: container,
+                    debugDescription: "Invalid speaker channel"
+                )
             }
             self = .invalidTiming(speaker)
         case "abnormalRT60":
             let parts = try container.decode(String.self, forKey: .details).split(separator: ",")
-            guard parts.count == 2,
-                  let rawValue = Int(parts[0]),
-                  let speaker = SpeakerChannel(rawValue: rawValue),
-                  let rt60 = Double(parts[1]) else {
-                throw DecodingError.dataCorruptedError(forKey: .details, in: container, debugDescription: "Invalid abnormalRT60 format")
+            guard
+                parts.count == 2,
+                let rawValue = Int(parts[0]),
+                let speaker = SpeakerChannel(rawValue: rawValue),
+                let rt60 = Double(parts[1])
+            else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .details,
+                    in: container,
+                    debugDescription: "Invalid abnormalRT60 format"
+                )
             }
             self = .abnormalRT60(speaker, rt60)
         default:
@@ -179,50 +145,152 @@ public enum CalibrationError: Error, LocalizedError, Codable {
         }
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
+    // MARK: Public
 
+    // MARK: - LocalizedError
+
+    public var errorDescription: String? {
         switch self {
         case .noHDMIDevice:
-            try container.encode("noHDMIDevice", forKey: .type)
-        case .unsupportedFormat(let details):
-            try container.encode("unsupportedFormat", forKey: .type)
-            try container.encode(details, forKey: .details)
-        case .configurationFailed(let reason):
-            try container.encode("configurationFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case .measurementFailed(let reason):
-            try container.encode("measurementFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case .processingFailed(let reason):
-            try container.encode("processingFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case .exportFailed(let reason):
-            try container.encode("exportFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
+            "No HDMI audio device found. Please connect your HDMI audio device and ensure it's selected in System Settings > Sound."
+        case let .unsupportedFormat(details):
+            "Unsupported audio format: \(details)"
+        case let .configurationFailed(reason):
+            "Failed to configure audio: \(reason)"
+        case let .measurementFailed(reason):
+            "Measurement failed: \(reason)"
+        case let .processingFailed(reason):
+            "Signal processing failed: \(reason)"
+        case let .exportFailed(reason):
+            "Export failed: \(reason)"
         case .permissionDenied:
-            try container.encode("permissionDenied", forKey: .type)
+            "Permission denied. Please grant microphone access in System Settings > Privacy & Security > Microphone."
         case .deviceBusy:
-            try container.encode("deviceBusy", forKey: .type)
+            "Audio device is busy. Please close other audio applications and try again."
         case .engineNotRunning:
-            try container.encode("engineNotRunning", forKey: .type)
+            "Audio engine is not running. Please restart calibration."
         case .noMicrophoneAccess:
-            try container.encode("noMicrophoneAccess", forKey: .type)
-        case .noSignal(let speaker):
-            try container.encode("noSignal", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case .clipping(let speaker):
-            try container.encode("clipping", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case .lowSNR(let speaker, let snr):
-            try container.encode("lowSNR", forKey: .type)
-            try container.encode("\(speaker.rawValue),\(snr)", forKey: .details)
-        case .invalidTiming(let speaker):
-            try container.encode("invalidTiming", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case .abnormalRT60(let speaker, let rt60):
-            try container.encode("abnormalRT60", forKey: .type)
-            try container.encode("\(speaker.rawValue),\(rt60)", forKey: .details)
+            "Microphone access not available. Please check System Settings > Privacy & Security > Microphone."
+        case let .noSignal(speaker):
+            "No signal detected from \(speaker.displayName). Check speaker connection and volume."
+        case let .clipping(speaker):
+            "Signal clipped on \(speaker.displayName). Reduce output volume and try again."
+        case let .lowSNR(speaker, snr):
+            "Signal-to-noise ratio too low on \(speaker.displayName) (\(String(format: "%.1f", snr)) dB). Reduce ambient noise or increase volume."
+        case let .invalidTiming(speaker):
+            "Invalid timing detected for \(speaker.displayName). Check latency compensation."
+        case let .abnormalRT60(speaker, rt60):
+            "Abnormal reverberation time (\(String(format: "%.2f", rt60))s) for \(speaker.displayName). Check room acoustics."
+        }
+    }
+
+    public var recoverySuggestion: String? {
+        switch self {
+        case .noHDMIDevice:
+            "Connect HDMI cable and check Audio MIDI Setup for device configuration."
+        case .permissionDenied, .noMicrophoneAccess:
+            "Open System Settings > Privacy & Security > Microphone and enable access for this application."
+        case .deviceBusy:
+            "Close all audio applications (music players, video editors, etc.) and restart calibration."
+        case .clipping:
+            "Lower the output volume in calibration settings and retry."
+        case .lowSNR:
+            "Ensure quiet environment, increase output volume, or check microphone position."
+        default:
+            nil
+        }
+    }
+
+    // MARK: - Equatable
+
+    public static func == (lhs: CalibrationError, rhs: CalibrationError) -> Bool {
+        switch (lhs, rhs) {
+        case (.noHDMIDevice, .noHDMIDevice),
+             (.permissionDenied, .permissionDenied),
+             (.deviceBusy, .deviceBusy),
+             (.engineNotRunning, .engineNotRunning),
+             (.noMicrophoneAccess, .noMicrophoneAccess):
+            true
+        case let (.unsupportedFormat(l), .unsupportedFormat(r)):
+            l == r
+        case let (.configurationFailed(l), .configurationFailed(r)):
+            l == r
+        case let (.measurementFailed(l), .measurementFailed(r)):
+            l == r
+        case let (.processingFailed(l), .processingFailed(r)):
+            l == r
+        case let (.exportFailed(l), .exportFailed(r)):
+            l == r
+        case let (.noSignal(l), .noSignal(r)):
+            l == r
+        case let (.clipping(l), .clipping(r)):
+            l == r
+        case let (.lowSNR(l1, l2), .lowSNR(r1, r2)):
+            l1 == r1 && l2 == r2
+        case let (.invalidTiming(l), .invalidTiming(r)):
+            l == r
+        case let (.abnormalRT60(l1, l2), .abnormalRT60(r1, r2)):
+            l1 == r1 && l2 == r2
+        default:
+            false
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(typeString, forKey: .type)
+        if let details = detailsValue {
+            try container.encode(details, forKey: .details)
+        }
+    }
+
+    // MARK: Internal
+
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey {
+        case type
+        case details
+    }
+
+    // MARK: Private
+
+    /// Type string for encoding
+    private var typeString: String {
+        switch self {
+        case .noHDMIDevice: "noHDMIDevice"
+        case .unsupportedFormat: "unsupportedFormat"
+        case .configurationFailed: "configurationFailed"
+        case .measurementFailed: "measurementFailed"
+        case .processingFailed: "processingFailed"
+        case .exportFailed: "exportFailed"
+        case .permissionDenied: "permissionDenied"
+        case .deviceBusy: "deviceBusy"
+        case .engineNotRunning: "engineNotRunning"
+        case .noMicrophoneAccess: "noMicrophoneAccess"
+        case .noSignal: "noSignal"
+        case .clipping: "clipping"
+        case .lowSNR: "lowSNR"
+        case .invalidTiming: "invalidTiming"
+        case .abnormalRT60: "abnormalRT60"
+        }
+    }
+
+    /// Details value for encoding (if applicable)
+    private var detailsValue: Encodable? {
+        switch self {
+        case let .unsupportedFormat(details): details
+        case let .configurationFailed(reason): reason
+        case let .measurementFailed(reason): reason
+        case let .processingFailed(reason): reason
+        case let .exportFailed(reason): reason
+        case let .noSignal(speaker): speaker.rawValue
+        case let .clipping(speaker): speaker.rawValue
+        case let .lowSNR(speaker, snr): "\(speaker.rawValue),\(snr)"
+        case let .invalidTiming(speaker): speaker.rawValue
+        case let .abnormalRT60(speaker, rt60): "\(speaker.rawValue),\(rt60)"
+        case .noHDMIDevice, .permissionDenied, .deviceBusy, .engineNotRunning, .noMicrophoneAccess:
+            nil
         }
     }
 }

@@ -1,0 +1,262 @@
+# SwiftLint Configuration for Spatial Audio Calibrator
+# https://github.com/realm/SwiftLint
+# Optimized for Swift 6.2 strict concurrency (March 2026)
+# SwiftLint version: 0.63.x
+
+# Paths to include during linting
+included:
+  - Sources/SpatialAudioCalibrator/Core
+  - Sources/SpatialAudioCalibrator/App
+  - Sources/SpatialAudioCalibrator/HAL
+  - Sources/SpatialAudioCalibrator/Utils
+  - Sources/SpatialAudioCalibrator/Models
+  - Sources/SpatialAudioCalibrator/Engine
+  - Sources/SpatialAudioCalibrator/DSP
+  - Tests
+
+# Paths to exclude from linting
+excluded:
+  - .build
+  - .swiftpm
+  - DerivedData
+  - Package.swift
+  - Sources/SpatialAudioCalibrator/spatial-audio-calibrator  # Xcode template files (not used)
+
+# Disable rules from the default enabled set
+disabled_rules:
+  - todo  # We'll add TODOs during development
+  - trailing_whitespace  # Handled by SwiftFormat
+  - line_length  # Handled by SwiftFormat
+  - type_name  # Allow shorter names for audio types
+  - identifier_name  # Allow short variable names in DSP code
+  - for_where  # Sometimes clearer with if inside for
+  - file_length  # Allow longer files for complex DSP code
+  - function_body_length  # DSP functions can be longer
+  - number_separator  # Don't require underscores in numbers
+  - type_contents_order  # Don't enforce specific ordering
+  - indentation_width  # Handled by SwiftFormat
+  - implicit_optional_initialization  # Explicit nil is clearer
+  - vertical_whitespace_between_cases  # Compact switch cases are fine
+  - sorted_imports  # Handled by SwiftFormat
+  - file_header  # Don't require file headers
+  - file_name  # Don't enforce file naming
+  - file_name_no_space  # Allow spaces in filenames
+  - vertical_whitespace_opening_braces  # Empty lines after braces are fine
+  - vertical_whitespace_closing_braces  # Empty lines before braces are fine
+  - switch_case_on_newline  # Compact switch cases are fine
+  - function_default_parameter_at_end  # Sometimes default first is clearer
+  - unavailable_function  # Don't require marking unimplemented
+  - implicitly_unwrapped_optional  # Sometimes needed for C interop
+  - opening_brace  # Handled by SwiftFormat
+  - trailing_comma  # Handled by SwiftFormat
+
+# Enable opt-in rules
+opt_in_rules:
+  # ============================================================================
+  # NEW SwiftLint 0.57-0.63 Rules (March 2026)
+  # ============================================================================
+  - prefer_key_path              # Prefer key paths over trailing closures with only member access
+  - no_empty_block               # Require code blocks to contain at least a comment
+  - static_over_final_class      # Prefer static over class in final classes
+  # Note: one_declaration_per_file disabled - too strict for existing codebase
+  # Note: trailing_comma handled by SwiftFormat
+
+  # ============================================================================
+  # Performance rules
+  # ============================================================================
+  - array_init
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - first_where
+  - flatmap_over_map_reduce
+  - last_where
+  - reduce_into
+  - sorted_first_last
+
+  # ============================================================================
+  # Code quality rules
+  # ============================================================================
+  - attributes
+  - closure_body_length
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - discouraged_none_name
+  - discouraged_object_literal
+  - explicit_init
+  - fallthrough
+  - fatal_error_message
+  - joined_default_parameter
+  - legacy_multiple
+  - legacy_objc_type
+  - let_var_whitespace
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - operator_usage_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - pattern_matching_keywords
+  - prefer_self_type_over_type_of_self
+  - prefer_zero_over_explicit_init
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - return_value_from_void_function
+  - static_operator
+  - strict_fileprivate
+  - switch_case_alignment
+  - toggle_bool
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - unowned_variable_capture
+  - untyped_error_in_catch
+  - vertical_parameter_alignment_on_call
+  - weak_delegate
+  - yoda_condition
+
+  # ============================================================================
+  # Swift 6 Concurrency rules (NEW for 2026)
+  # ============================================================================
+  - async_without_await
+  # Note: incompatible_concurrency_annotation is disabled as we use @preconcurrency import
+
+  # ============================================================================
+  # Testing rules
+  # ============================================================================
+  - balanced_xctest_lifecycle
+  # Note: single_test_class disabled - Swift Testing allows multiple suites
+  - xct_specific_matcher
+
+  # ============================================================================
+  # Accessibility rules
+  # ============================================================================
+  - nslocalizedstring_key
+  - nslocalizedstring_require_bundle
+
+  # ============================================================================
+  # Documentation rules (opt-in for new code)
+  # ============================================================================
+  # Note: missing_docs disabled - add documentation incrementally
+
+# Analyzer rules (run with `swiftlint analyze`)
+analyzer_rules:
+  - explicit_self
+  - unused_import
+  - unused_declaration
+  - capture_variable   # Detect variables captured by closures
+
+# ============================================================================
+# Configurable rule settings (Stricter for March 2026)
+# ============================================================================
+force_cast: error  # Force casts should never be used
+force_try: error   # Force tries should never be used
+
+type_body_length:
+  warning: 350  # Allow larger types (enums used as namespaces)
+  error: 500    # Reduced from 600
+
+cyclomatic_complexity:
+  warning: 12   # Reduced from 15
+  error: 20     # Reduced from 25
+
+large_tuple:
+  warning: 2    # Reduced from 3
+  error: 3      # Reduced from 4
+
+nesting:
+  type_level:
+    warning: 2
+    error: 3
+
+# Closure body length (stricter for 2026)
+closure_body_length:
+  warning: 25   # Reduced from 30
+  error: 40     # Reduced from 50
+
+# Function parameter count (new in 2026)
+function_parameter_count:
+  warning: 5
+  error: 8
+
+# Trailing comma configuration (new rule)
+trailing_comma:
+  mandatory_comma: false  # No mandatory trailing commas
+
+# ============================================================================
+# Custom rules (Project-specific)
+# ============================================================================
+custom_rules:
+  # Logging rules
+  no_print_statements:
+    included: ".*\\.swift"
+    excluded:
+      - ".*Test\\.swift"
+      - ".*App\\.swift"
+    name: "No print statements"
+    regex: "\\bprint\\s*\\("
+    message: "Use OSLog or unified logging system instead of print statements"
+    severity: warning
+
+  no_debug_print:
+    included: ".*\\.swift"
+    name: "No debug print"
+    regex: "\\bdebugPrint\\s*\\("
+    message: "Use OSLog or unified logging system instead of debugPrint"
+    severity: warning
+
+  no_nslog:
+    included: ".*\\.swift"
+    name: "No NSLog"
+    regex: "\\bNSLog\\s*\\("
+    message: "Use OSLog instead of NSLog for better performance"
+    severity: warning
+
+  # Swift 6 concurrency best practices
+  avoid_global_actor_isolation:
+    included: ".*\\.swift"
+    excluded:
+      - ".*Test\\.swift"
+    name: "Avoid global actor isolation"
+    regex: "@MainActor\\s+(class|struct|actor|enum)"
+    message: "Consider using @MainActor on individual methods instead of entire types for better concurrency"
+    severity: warning
+
+  prefer_task_local:
+    included: ".*\\.swift"
+    name: "Prefer TaskLocal for context"
+    regex: "Thread\\.current"
+    message: "Prefer TaskLocal values over Thread.current for Swift concurrency"
+    severity: warning
+
+  no_dispatch_async_main:
+    included: ".*\\.swift"
+    name: "Prefer Task over DispatchQueue.main"
+    regex: "DispatchQueue\\.main\\.async"
+    message: "Prefer Task { @MainActor in } over DispatchQueue.main.async for Swift concurrency"
+    severity: warning
+
+  # Audio-specific rules
+  no_fatal_error_in_production:
+    included: ".*\\.swift"
+    excluded:
+      - ".*Test\\.swift"
+    name: "Avoid fatalError in production code"
+    regex: "\\bfatalError\\s*\\("
+    message: "Use throwing errors instead of fatalError for recoverable errors"
+    severity: warning
+
+# Reporter format (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)
+reporter: "github-actions-logging"
+
+# Fail on warnings in CI (stricter for 2026)
+strict: true

@@ -1,0 +1,87 @@
+# Periphery Configuration for Spatial Audio Calibrator
+# https://github.com/peripheryapp/periphery
+# Optimized for Swift 6.2 (March 2026)
+
+# ============================================================================
+# Project configuration
+# ============================================================================
+project: SpatialAudioCalibrator
+
+# ============================================================================
+# Targets to analyze
+# ============================================================================
+targets:
+  - SpatialAudioCalibrator
+
+# ============================================================================
+# Schemes to build (for SPM projects, use package)
+# ============================================================================
+schemes:
+  - SpatialAudioCalibrator
+
+# ============================================================================
+# Index store path (auto-detected for SPM)
+# ============================================================================
+# index-store-path: .build/index/store
+
+# ============================================================================
+# Exclude files from analysis
+# ============================================================================
+exclude:
+  - "**/Tests/**"
+  - ".build/**"
+  - ".swiftpm/**"
+  - "Sources/SpatialAudioCalibrator/spatial-audio-calibrator/**"
+
+# ============================================================================
+# Retain public declarations (for library projects)
+# ============================================================================
+# Set to false for applications - only used code should remain
+retain-public: false
+
+# ============================================================================
+# Retain rules
+# ============================================================================
+# Don't retain ObjC-accessible code (we're pure Swift)
+retain-objc-accessible: false
+
+# Don't retain deprecated code - clean it up
+retain-deprecated: false
+
+# ============================================================================
+# External dependencies to ignore
+# ============================================================================
+external-dependencies:
+  - package:swift-argument-parser
+
+# ============================================================================
+# Report format
+# ============================================================================
+reporter: xcode
+
+# ============================================================================
+# Strict mode - treat warnings as errors (STRICER for 2026)
+# ============================================================================
+strict: true
+
+# ============================================================================
+# Enable verbose output
+# ============================================================================
+verbose: false
+
+# ============================================================================
+# Analysis options
+# ============================================================================
+# Check for redundant public accessibility
+redundant-public-analysis: true
+
+# Check for unused imports
+check-unused-imports: true
+
+# ============================================================================
+# Guidelines
+# ============================================================================
+guidelines:
+  - "Swift Package Manager projects should use 'package' build configuration"
+  - "Run 'periphery scan --setup' to configure initial settings"
+  - "Use 'periphery scan --skip-build --index-store-path .build/index/store' after building to speed up analysis"

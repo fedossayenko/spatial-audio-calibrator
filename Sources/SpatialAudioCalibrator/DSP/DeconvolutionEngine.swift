@@ -9,8 +9,16 @@ import Foundation
 /// 3. Perform regularized spectral division: H[k] = Y[k] / X[k]
 /// 4. Apply inverse FFT to get time-domain impulse response
 public final class DeconvolutionEngine {
+    // MARK: Lifecycle
 
-    // MARK: - Properties
+    // MARK: - Initialization
+
+    public init(fftSize: Int = 262_144, regularizationThreshold: Float = -60) {
+        self.fftSize = fftSize
+        self.regularizationThreshold = regularizationThreshold
+    }
+
+    // MARK: Public
 
     /// FFT size used for processing
     public private(set) var fftSize: Int
@@ -18,30 +26,28 @@ public final class DeconvolutionEngine {
     /// Regularization threshold in dB
     public var regularizationThreshold: Float
 
-    /// FFT processor instance
-    private var fftProcessor: FFTProcessor?
-
-    // MARK: - Initialization
-
-    public init(fftSize: Int = 262144, regularizationThreshold: Float = -60) {
-        self.fftSize = fftSize
-        self.regularizationThreshold = regularizationThreshold
-    }
-
     // MARK: - Processing
 
     /// Extract impulse response from recording
     /// - Parameters:
     ///   - excitation: Original excitation signal (log sweep)
     ///   - recording: Recorded response
+    ///   - sampleRate: Sample rate of the signals
+    ///   - speaker: Speaker channel being measured
     /// - Returns: Extracted impulse response
     public func extractImpulseResponse(
         excitation: [Float],
-        recording: [Float]
-    ) async throws -> ImpulseResponse {
-        try await extractImpulseResponse(
+        recording: [Float],
+        sampleRate: Double,
+        speaker: SpeakerChannel
+    )
+        throws -> ImpulseResponse
+    {
+        try extractImpulseResponse(
             excitation: excitation,
             recording: recording,
+            sampleRate: sampleRate,
+            speaker: speaker,
             progress: nil
         )
     }
@@ -50,8 +56,12 @@ public final class DeconvolutionEngine {
     public func extractImpulseResponse(
         excitation: [Float],
         recording: [Float],
+        sampleRate: Double,
+        speaker: SpeakerChannel,
         progress: ((Double) -> Void)?
-    ) async throws -> ImpulseResponse {
+    )
+        throws -> ImpulseResponse
+    {
         // Calculate required FFT size
         let minLength = excitation.count + recording.count - 1
         let requiredFFTSize = MathHelpers.nextPowerOf2(minLength)
@@ -102,11 +112,16 @@ public final class DeconvolutionEngine {
 
         return ImpulseResponse(
             samples: impulseResponse,
-            sampleRate: 48000, // Should be passed as parameter
+            sampleRate: sampleRate,
             fftSize: fftSize,
-            speaker: .frontLeft // Should be passed as parameter
+            speaker: speaker
         )
     }
+
+    // MARK: Private
+
+    /// FFT processor instance
+    private var fftProcessor: FFTProcessor?
 
     // MARK: - Spectral Division
 
@@ -116,7 +131,9 @@ public final class DeconvolutionEngine {
         recordingImag: [Float],
         excitationReal: [Float],
         excitationImag: [Float]
-    ) -> (real: [Float], imag: [Float]) {
+    )
+        -> (real: [Float], imag: [Float])
+    {
         let count = min(
             min(recordingReal.count, recordingImag.count),
             min(excitationReal.count, excitationImag.count)
@@ -127,7 +144,7 @@ public final class DeconvolutionEngine {
 
         // Calculate magnitude of excitation spectrum for threshold
         var excMagnitude = [Float](repeating: 0, count: count)
-        for i in 0..<count {
+        for i in 0 ..< count {
             excMagnitude[i] = sqrt(excitationReal[i] * excitationReal[i] + excitationImag[i] * excitationImag[i])
         }
 
@@ -140,7 +157,7 @@ public final class DeconvolutionEngine {
         let thresholdSquared = threshold * threshold
 
         // Perform division with regularization
-        for i in 0..<count {
+        for i in 0 ..< count {
             let magX = excMagnitude[i]
             let realY = recordingReal[i]
             let imagY = recordingImag[i]
@@ -189,7 +206,7 @@ public final class DeconvolutionEngine {
 
         // Also trim leading silence (find first significant sample)
         var firstSignificantSample = 0
-        for i in 0..<end {
+        for i in 0 ..< end {
             if abs(impulse[i]) > linearThreshold {
                 firstSignificantSample = i
                 break
@@ -199,6 +216,6 @@ public final class DeconvolutionEngine {
         // Include a few samples before the first significant one
         let start = max(0, firstSignificantSample - 10)
 
-        return Array(impulse[start..<end])
+        return Array(impulse[start ..< end])
     }
 }

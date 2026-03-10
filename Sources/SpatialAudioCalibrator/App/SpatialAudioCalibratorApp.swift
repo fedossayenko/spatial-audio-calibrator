@@ -7,52 +7,50 @@ import Foundation
 /// using logarithmic sine sweeps and spectral deconvolution.
 @main
 public struct SpatialAudioCalibratorApp {
+    // MARK: Public
 
-    public static func main() async {
+    public static func main() {
         print("Spatial Audio Calibrator v1.0.0")
         print("================================\n")
 
+        // List available devices
+        listDevices()
+
+        // Run system check
+        print("\nSystem Verification")
+        print("-------------------")
+
+        let calibrator = AudioCalibrator(config: .default)
+
         do {
-            // List available devices
-            await listDevices()
+            let status = try calibrator.verifySystemConfiguration()
 
-            // Run system check
-            print("\nSystem Verification")
-            print("-------------------")
+            print("Output Device: \(status.outputDevice?.name ?? "Not found")")
+            print("HDMI Connected: \(status.hasHDMI ? "Yes" : "No")")
+            print("5.1 Support: \(status.supports51 ? "Yes" : "No")")
+            print("Microphone Access: \(status.microphoneAccess ? "Granted" : "Denied")")
+            print("Latency: \(String(format: "%.2f", status.latencyMs)) ms")
 
-            let calibrator = AudioCalibrator(config: .default)
-
-            do {
-                let status = try await calibrator.verifySystemConfiguration()
-
-                print("Output Device: \(status.outputDevice?.name ?? "Not found")")
-                print("HDMI Connected: \(status.hasHDMI ? "Yes" : "No")")
-                print("5.1 Support: \(status.supports51 ? "Yes" : "No")")
-                print("Microphone Access: \(status.microphoneAccess ? "Granted" : "Denied")")
-                print("Latency: \(String(format: "%.2f", status.latencyMs)) ms")
-
-                if !status.isReady {
-                    print("\n⚠️  Issues detected:")
-                    for issue in status.issues {
-                        print("  - \(issue)")
-                    }
+            if !status.isReady {
+                print("\n⚠️  Issues detected:")
+                for issue in status.issues {
+                    print("  - \(issue)")
                 }
-
-                if status.isReady {
-                    print("\n✅ System ready for calibration")
-                    print("\nTo start calibration, run the GUI application or use the API.")
-                }
-            } catch {
-                print("❌ Verification failed: \(error.localizedDescription)")
+                exit(1)
             }
 
+            print("\n✅ System ready for calibration")
+            print("\nTo start calibration, run the GUI application or use the API.")
+
         } catch {
-            print("Error: \(error)")
+            print("❌ Verification failed: \(error.localizedDescription)")
             exit(1)
         }
     }
 
-    private static func listDevices() async {
+    // MARK: Private
+
+    private static func listDevices() {
         print("Available Audio Devices")
         print("-----------------------\n")
 

@@ -1,0 +1,17 @@
+# SwiftFormat Configuration for Spatial Audio Calibrator
+# https://github.com/nicklockwood/SwiftFormat
+# Version: 0.59.0
+
+--swiftversion 6
+
+# Indentation
+--indent 4
+
+# Line length
+--maxwidth 120
+
+# Rules enabled
+--enable sortImports,organizeDeclarations
+
+# Exclude directories
+--exclude .build,.swiftpm,DerivedData,Pods

@@ -1,0 +1,61 @@
+# Build artifacts
+.build/
+DerivedData/
+*.build/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# macOS
+.DS_Store
+._*
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+
+# Test outputs
+*.lcov
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Periphery
+.periphery-build.log
+periphery-report.json
+
+# SwiftLint
+.swiftlint-cache/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Archives
+*.zip
+*.tar.gz
+*.dmg

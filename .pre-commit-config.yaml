@@ -1,0 +1,134 @@
+# Pre-commit Configuration for Spatial Audio Calibrator
+# https://pre-commit.com
+# Optimized for Swift 6.2 (March 2026)
+
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+# ============================================================================
+# Default settings
+# ============================================================================
+default_stages: [pre-commit]
+default_language_version:
+  python: python3
+
+# ============================================================================
+# CI configuration
+# ============================================================================
+ci:
+  autofix_prs: true
+  autofix_commit_msg: 'style: auto-fix pre-commit issues'
+  autoupdate_branch: main
+  autoupdate_commit_msg: 'chore: pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [periphery]
+
+# ============================================================================
+# Repositories and Hooks
+# ============================================================================
+repos:
+  # ============================================================================
+  # SwiftLint - Swift code style enforcement
+  # ============================================================================
+  - repo: https://github.com/realm/SwiftLint
+    rev: 0.57.0
+    hooks:
+      - id: swiftlint
+        name: SwiftLint
+        entry: swiftlint lint --strict --config .swiftlint.yml
+        language: system
+        types: [swift]
+        pass_filenames: false
+        stages: [pre-commit]
+
+  # ============================================================================
+  # SwiftFormat - Swift code formatting
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: swiftformat
+        name: SwiftFormat
+        entry: swiftformat --config .swiftformat
+        language: system
+        types: [swift]
+        pass_filenames: true
+        stages: [pre-commit]
+
+  # ============================================================================
+  # Periphery - Dead code detection (manual trigger)
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: periphery
+        name: Periphery (Dead Code Detection)
+        entry: bash -c 'swift build && periphery scan --config .periphery.yml --skip-build --index-store-path .build/index/store'
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+  # ============================================================================
+  # Swift Package Security Checks
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: swift-package-resolve
+        name: Swift Package Resolve
+        entry: swift package resolve
+        language: system
+        files: 'Package\.swift|Package\.resolved'
+        pass_filenames: false
+        stages: [pre-commit]
+
+      - id: swift-package-update-check
+        name: Swift Package Update Check
+        entry: bash -c 'swift package update --dry-run 2>&1 | grep -q "would be updated" && echo "⚠️  Packages have updates available. Run swift package update to update." || true'
+        language: system
+        files: 'Package\.swift'
+        pass_filenames: false
+        stages: [manual]
+
+  # ============================================================================
+  # General file checks
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+        exclude: \.md$
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+
+  # ============================================================================
+  # Security checks
+  # ============================================================================
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock|.build/
+
+  # ============================================================================
+  # Commit message format
+  # ============================================================================
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.2.1
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+      - id: commitizen-branch
+        stages: [pre-push]
