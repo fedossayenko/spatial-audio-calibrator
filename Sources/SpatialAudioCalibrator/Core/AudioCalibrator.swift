@@ -98,7 +98,7 @@ public final class AudioCalibrator: ObservableObject {
             let hdmiDevice = deviceManager.findHDMIDevice()
             let outputDeviceID = hdmiDevice ?? deviceManager.getDefaultOutputDevice()
 
-            // Get device info
+            // Get output device info
             let outputDevice = outputDeviceID.flatMap { deviceID in
                 AudioDeviceInfo(
                     deviceID: deviceID,
@@ -110,6 +110,22 @@ public final class AudioCalibrator: ObservableObject {
                     isHDMI: deviceManager.isHDMI(deviceID),
                     isInput: false,
                     isOutput: true
+                )
+            }
+
+            // Get input device info (first available input device)
+            let inputDeviceID = deviceManager.getInputDevices().first
+            let inputDevice = inputDeviceID.flatMap { deviceID in
+                AudioDeviceInfo(
+                    deviceID: deviceID,
+                    name: deviceManager.getName(deviceID) ?? "Unknown",
+                    uid: deviceManager.getUID(deviceID) ?? "",
+                    transportType: deviceManager.getTransportType(deviceID) ?? 0,
+                    sampleRate: deviceManager.getSampleRate(deviceID),
+                    channelCount: nil,
+                    isHDMI: deviceManager.isHDMI(deviceID),
+                    isInput: true,
+                    isOutput: false
                 )
             }
 
@@ -126,7 +142,7 @@ public final class AudioCalibrator: ObservableObject {
 
             let status = SystemStatus(
                 outputDevice: outputDevice,
-                inputDevice: nil, // TODO: Get actual input device
+                inputDevice: inputDevice,
                 hasHDMI: hdmiDevice != nil,
                 supports51: outputDeviceID.flatMap { deviceManager.supportsChannelCount($0, count: 6) } ?? false,
                 latencySamples: latencySamples,
