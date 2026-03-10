@@ -15,8 +15,36 @@ public final class AudioCalibrator: ObservableObject {
 
     // MARK: - Initialization
 
+    /// Production initializer - uses real audio hardware
     public init(config: CalibrationConfig = .default) {
         self.config = config
+        deviceManager = AudioDeviceManagerAdapter()
+        deconvolutionEngine = DeconvolutionEngine(
+            fftSize: config.fftSize,
+            regularizationThreshold: config.regularizationDB
+        )
+        sweepGenerator = SweepGenerator(
+            startFrequency: config.startFrequency,
+            endFrequency: config.endFrequency,
+            duration: config.sweepDuration,
+            sampleRate: config.sampleRate,
+            amplitude: config.outputAmplitude
+        )
+    }
+
+    /// Test initializer - accepts mock dependencies
+    /// - Parameters:
+    ///   - config: Calibration configuration
+    ///   - deviceManager: Audio device manager (use mock for testing)
+    ///   - engineFactory: Factory closure to create audio engine (use mock for testing)
+    init(
+        config: CalibrationConfig,
+        deviceManager: AudioDeviceManaging,
+        engineFactory: @escaping (AudioDeviceID?) throws -> AudioEngineProtocol
+    ) {
+        self.config = config
+        self.deviceManager = deviceManager
+        self.engineFactory = engineFactory
         deconvolutionEngine = DeconvolutionEngine(
             fftSize: config.fftSize,
             regularizationThreshold: config.regularizationDB
@@ -67,11 +95,23 @@ public final class AudioCalibrator: ObservableObject {
 
         do {
             // Check for HDMI device
-            let hdmiDevice = AudioDeviceManager.findHDMIDevice()
-            let outputDeviceID = hdmiDevice ?? AudioDeviceManager.getDefaultOutputDevice()
+            let hdmiDevice = deviceManager.findHDMIDevice()
+            let outputDeviceID = hdmiDevice ?? deviceManager.getDefaultOutputDevice()
 
             // Get device info
-            let outputDevice = outputDeviceID.flatMap { AudioDeviceInfo(deviceID: $0) }
+            let outputDevice = outputDeviceID.flatMap { deviceID in
+                AudioDeviceInfo(
+                    deviceID: deviceID,
+                    name: deviceManager.getName(deviceID) ?? "Unknown",
+                    uid: deviceManager.getUID(deviceID) ?? "",
+                    transportType: deviceManager.getTransportType(deviceID) ?? 0,
+                    sampleRate: deviceManager.getSampleRate(deviceID),
+                    channelCount: nil,
+                    isHDMI: deviceManager.isHDMI(deviceID),
+                    isInput: false,
+                    isOutput: true
+                )
+            }
 
             // Check microphone access
             let microphoneAccess = checkMicrophoneAccess()
@@ -79,7 +119,7 @@ public final class AudioCalibrator: ObservableObject {
             // Get latency info
             var latencySamples: UInt32 = 0
             var latencyMs: Double = 0
-            if let deviceID = outputDeviceID, let bufferConfig = AudioDeviceManager.getBufferConfiguration(deviceID) {
+            if let deviceID = outputDeviceID, let bufferConfig = deviceManager.getBufferConfiguration(deviceID) {
                 latencySamples = bufferConfig.totalLatency
                 latencyMs = bufferConfig.latencyMs(at: config.sampleRate)
             }
@@ -88,7 +128,7 @@ public final class AudioCalibrator: ObservableObject {
                 outputDevice: outputDevice,
                 inputDevice: nil, // TODO: Get actual input device
                 hasHDMI: hdmiDevice != nil,
-                supports51: outputDeviceID.flatMap { AudioDeviceManager.supportsChannelCount($0, count: 6) } ?? false,
+                supports51: outputDeviceID.flatMap { deviceManager.supportsChannelCount($0, count: 6) } ?? false,
                 latencySamples: latencySamples,
                 latencyMs: latencyMs,
                 microphoneAccess: microphoneAccess
@@ -285,9 +325,15 @@ public final class AudioCalibrator: ObservableObject {
 
     // MARK: - Private Properties
 
-    private var audioEngine: AudioEngine?
+    private var audioEngine: AudioEngineProtocol?
     private var deconvolutionEngine: DeconvolutionEngine
     private var sweepGenerator: SweepGenerator
+
+    /// Device manager - uses real implementation by default, mock for testing
+    private var deviceManager: AudioDeviceManaging
+
+    /// Factory for creating audio engines - nil uses default AudioEngine
+    private var engineFactory: ((AudioDeviceID?) throws -> AudioEngineProtocol)?
 
     private func checkMicrophoneAccess() -> Bool {
         // Check actual microphone permission status
@@ -297,21 +343,82 @@ public final class AudioCalibrator: ObservableObject {
         }
 
         // Also verify input devices are available
-        return !AudioDeviceManager.getInputDevices().isEmpty
+        return !deviceManager.getInputDevices().isEmpty
     }
 
     private func initializeEngine() throws {
         state = .initializing
 
         // Find output device
-        guard let deviceID = AudioDeviceManager.findHDMIDevice() ?? AudioDeviceManager.getDefaultOutputDevice() else {
+        guard let deviceID = deviceManager.findHDMIDevice() ?? deviceManager.getDefaultOutputDevice() else {
             throw CalibrationError.noHDMIDevice
         }
 
         // Configure 5.1 output
-        AudioDeviceManager.configure51Surround(deviceID)
+        _ = deviceManager.configure51Surround(deviceID)
 
-        // Create audio engine
-        audioEngine = try AudioEngine(outputDeviceID: deviceID)
+        // Create audio engine using factory or default
+        if let factory = engineFactory {
+            audioEngine = try factory(deviceID)
+        } else {
+            audioEngine = try AudioEngine(outputDeviceID: deviceID)
+        }
+    }
+}
+
+// MARK: - AudioDeviceManager Adapter
+
+/// Adapter to make AudioDeviceManager static methods conform to protocol
+private final class AudioDeviceManagerAdapter: AudioDeviceManaging {
+    func getAllDevices() -> [AudioDeviceID] {
+        AudioDeviceManager.getAllDevices()
+    }
+
+    func getOutputDevices() -> [AudioDeviceID] {
+        AudioDeviceManager.getOutputDevices()
+    }
+
+    func getInputDevices() -> [AudioDeviceID] {
+        AudioDeviceManager.getInputDevices()
+    }
+
+    func findHDMIDevice() -> AudioDeviceID? {
+        AudioDeviceManager.findHDMIDevice()
+    }
+
+    func getDefaultOutputDevice() -> AudioDeviceID? {
+        AudioDeviceManager.getDefaultOutputDevice()
+    }
+
+    func getName(_ deviceID: AudioDeviceID) -> String? {
+        AudioDeviceManager.getName(deviceID)
+    }
+
+    func getUID(_ deviceID: AudioDeviceID) -> String? {
+        AudioDeviceManager.getUID(deviceID)
+    }
+
+    func getTransportType(_ deviceID: AudioDeviceID) -> UInt32? {
+        AudioDeviceManager.getTransportType(deviceID)
+    }
+
+    func getSampleRate(_ deviceID: AudioDeviceID) -> Double? {
+        AudioDeviceManager.getSampleRate(deviceID)
+    }
+
+    func isHDMI(_ deviceID: AudioDeviceID) -> Bool {
+        AudioDeviceManager.isHDMI(deviceID)
+    }
+
+    func supportsChannelCount(_ deviceID: AudioDeviceID, count: UInt32) -> Bool {
+        AudioDeviceManager.supportsChannelCount(deviceID, count: count)
+    }
+
+    func configure51Surround(_ deviceID: AudioDeviceID) -> Bool {
+        AudioDeviceManager.configure51Surround(deviceID)
+    }
+
+    func getBufferConfiguration(_ deviceID: AudioDeviceID) -> BufferConfiguration? {
+        AudioDeviceManager.getBufferConfiguration(deviceID)
     }
 }
