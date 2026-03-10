@@ -55,6 +55,30 @@ struct IntegrationTests {
         #expect(status.hasHDMI == true)
     }
 
+    @Test("AudioCalibrator detects input device")
+    @MainActor
+    func audioCalibratorDetectsInputDevice() throws {
+        let mockDeviceManager = MockAudioDeviceManager()
+        mockDeviceManager.configureFor51HDMI()
+
+        let mockEngineFactory: (AudioDeviceID?) throws -> AudioEngineProtocol = { _ in
+            MockAudioEngine()
+        }
+
+        let calibrator = AudioCalibrator(
+            config: .default,
+            deviceManager: mockDeviceManager,
+            engineFactory: mockEngineFactory
+        )
+
+        let status = try calibrator.verifySystemConfiguration()
+
+        // Input device should be detected (mock config includes micDeviceID = 200)
+        #expect(status.inputDevice != nil)
+        #expect(status.inputDevice?.isInput == true)
+        #expect(status.inputDevice?.isOutput == false)
+    }
+
     @Test("AudioCalibrator handles no HDMI scenario")
     @MainActor
     func audioCalibratorNoHDMIScenario() throws {
