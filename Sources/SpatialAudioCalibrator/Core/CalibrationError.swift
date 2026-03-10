@@ -1,7 +1,7 @@
 import Foundation
 
 /// Errors that can occur during the calibration process.
-public enum CalibrationError: Error, LocalizedError, Codable {
+public enum CalibrationError: Error, LocalizedError, Codable, Equatable {
     /// No HDMI audio device found
     case noHDMIDevice
 
@@ -198,6 +198,41 @@ public enum CalibrationError: Error, LocalizedError, Codable {
             "Ensure quiet environment, increase output volume, or check microphone position."
         default:
             nil
+        }
+    }
+
+    // MARK: - Equatable
+
+    public static func == (lhs: CalibrationError, rhs: CalibrationError) -> Bool {
+        switch (lhs, rhs) {
+        case (.noHDMIDevice, .noHDMIDevice),
+             (.permissionDenied, .permissionDenied),
+             (.deviceBusy, .deviceBusy),
+             (.engineNotRunning, .engineNotRunning),
+             (.noMicrophoneAccess, .noMicrophoneAccess):
+            true
+        case let (.unsupportedFormat(l), .unsupportedFormat(r)):
+            l == r
+        case let (.configurationFailed(l), .configurationFailed(r)):
+            l == r
+        case let (.measurementFailed(l), .measurementFailed(r)):
+            l == r
+        case let (.processingFailed(l), .processingFailed(r)):
+            l == r
+        case let (.exportFailed(l), .exportFailed(r)):
+            l == r
+        case let (.noSignal(l), .noSignal(r)):
+            l == r
+        case let (.clipping(l), .clipping(r)):
+            l == r
+        case let (.lowSNR(l1, l2), .lowSNR(r1, r2)):
+            l1 == r1 && l2 == r2
+        case let (.invalidTiming(l), .invalidTiming(r)):
+            l == r
+        case let (.abnormalRT60(l1, l2), .abnormalRT60(r1, r2)):
+            l1 == r1 && l2 == r2
+        default:
+            false
         }
     }
 

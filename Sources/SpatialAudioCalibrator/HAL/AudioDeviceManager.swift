@@ -107,19 +107,23 @@ public enum AudioDeviceManager {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var nameCFString: CFString = "" as CFString
-        var size = UInt32(MemoryLayout<CFString>.size)
+        var size = UInt32(MemoryLayout<UnsafeMutableRawPointer>.size)
+        var namePtr: UnsafeMutableRawPointer?
 
-        let status = AudioObjectGetPropertyData(
-            deviceID,
-            &propertyAddress,
-            0,
-            nil,
-            &size,
-            &nameCFString
-        )
+        let status = withUnsafeMutablePointer(to: &namePtr) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &propertyAddress,
+                0,
+                nil,
+                &size,
+                ptr
+            )
+        }
 
-        return status == noErr ? (nameCFString as String) : nil
+        guard status == noErr, let rawPtr = namePtr else { return nil }
+        let cfString = Unmanaged<CFString>.fromOpaque(rawPtr).takeUnretainedValue()
+        return cfString as String
     }
 
     /// Get device unique identifier
@@ -130,19 +134,23 @@ public enum AudioDeviceManager {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var uidCFString: CFString = "" as CFString
-        var size = UInt32(MemoryLayout<CFString>.size)
+        var size = UInt32(MemoryLayout<UnsafeMutableRawPointer>.size)
+        var uidPtr: UnsafeMutableRawPointer?
 
-        let status = AudioObjectGetPropertyData(
-            deviceID,
-            &propertyAddress,
-            0,
-            nil,
-            &size,
-            &uidCFString
-        )
+        let status = withUnsafeMutablePointer(to: &uidPtr) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &propertyAddress,
+                0,
+                nil,
+                &size,
+                ptr
+            )
+        }
 
-        return status == noErr ? (uidCFString as String) : nil
+        guard status == noErr, let rawPtr = uidPtr else { return nil }
+        let cfString = Unmanaged<CFString>.fromOpaque(rawPtr).takeUnretainedValue()
+        return cfString as String
     }
 
     /// Get transport type (HDMI, USB, Built-in, etc.)

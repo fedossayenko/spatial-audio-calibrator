@@ -6,7 +6,7 @@ import Foundation
 /// `idle` → `initializing` → `verifying` → `ready` → `measuring` → `processing` → `completed`
 ///
 /// Any state can transition to `error` if a failure occurs.
-public enum CalibrationState: Equatable {
+public enum CalibrationState: Equatable, Sendable {
     /// Initial state, no calibration in progress
     case idle
 
