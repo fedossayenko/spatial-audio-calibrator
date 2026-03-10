@@ -1,0 +1,74 @@
+# SwiftFormat Configuration for Spatial Audio Calibrator
+# https://github.com/nicklockwood/SwiftFormat
+
+# Swift version
+--swiftversion 5.9
+
+# Indentation
+--indent 4
+--indentcase false
+--tabwidth 4
+
+# Line length
+--maxwidth 120
+--linewidth 120
+
+# Spacing
+--allman false
+--extensionacl on-extension
+--commas inline
+--trimwhitespace always
+--insertcr false
+
+# Braces
+--closingbrace balanced
+--wraparguments before-first
+--wrapcollections before-first
+--wrapparameters before-first
+--wrapreturntype if-multiline
+--wrapconditions before-first
+--wrapeffects if-multiline
+
+# Imports
+--importspacing true
+--header strip
+
+# Mark comments
+--marktypes always
+--markextensions always
+--marks generic
+
+# Unused code
+--stripunusedargs closure-only
+--redundanttype explicit
+
+# Access control
+--aclblockorder private,fileprivate,internal,public,open
+
+# Code organization
+--organizetypes class,struct,enum,protocol,extension
+--typeorder class,struct,enum,protocol,extension
+
+# Rules enabled
+--enable \
+    organizeDeclarations,\
+    sortImports,\
+    spaceInsideBraces,\
+    spaceInsideGenerics,\
+    spaceInsideParens,\
+    spaceAroundBraces,\
+    spaceAroundOperators,\
+    spaceInsideBrackets
+
+# Rules disabled
+--disable \
+    trailingSpace,\
+    consecutiveBlankLines,\
+    blankLinesAroundMark,\
+    blankLineAfterImports
+
+# File header (optional - uncomment to use)
+# --header "Copyright © 2025. All rights reserved."
+
+# Exclude directories
+--exclude .build,.swiftpm,DerivedData,Pods

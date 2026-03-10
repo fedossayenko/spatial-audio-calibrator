@@ -1,0 +1,73 @@
+# Pre-commit Configuration for Spatial Audio Calibrator
+# https://pre-commit.com
+
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+  # SwiftLint - Swift code style enforcement
+  - repo: https://github.com/realm/SwiftLint
+    rev: 0.57.0
+    hooks:
+      - id: swiftlint
+        name: SwiftLint
+        entry: swiftlint lint --strict --config .swiftlint.yml
+        language: system
+        types: [swift]
+        pass_filenames: false
+
+  # SwiftFormat - Swift code formatting
+  - repo: local
+    hooks:
+      - id: swiftformat
+        name: SwiftFormat
+        entry: swiftformat --config .swiftformat
+        language: system
+        types: [swift]
+        pass_filenames: true
+
+  # Periphery - Dead code detection
+  - repo: local
+    hooks:
+      - id: periphery
+        name: Periphery (Dead Code Detection)
+        entry: bash -c 'periphery scan --setup'
+        language: system
+        pass_filenames: false
+        stages: [manual]  # Run manually with: pre-commit run periphery --hook-stage manual
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+        exclude: \.md$
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Commit message format (optional)
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.29.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+# CI configuration
+ci:
+  autofix_prs: true
+  autofix_commit_msg: 'style: auto-fix pre-commit issues'
+  autoupdate_branch: main
+  autoupdate_commit_msg: 'chore: pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [periphery]

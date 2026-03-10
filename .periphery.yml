@@ -1,0 +1,49 @@
+# Periphery Configuration for Spatial Audio Calibrator
+# https://github.com/peripheryapp/periphery
+
+# Project configuration
+project: SpatialAudioCalibrator
+
+# Targets to analyze
+targets:
+  - SpatialAudioCalibrator
+
+# Schemes to build (for SPM projects, use package)
+schemes:
+  - SpatialAudioCalibrator
+
+# Index store path (auto-detected for SPM)
+# index-store-path: .build/index/store
+
+# Exclude files from analysis
+exclude:
+  - "**/Tests/**"
+  - ".build/**"
+  - ".swiftpm/**"
+
+# Retain public declarations even if unused (for library projects)
+retain-public: true
+
+# Enable specific retain rules
+retain-objc-accessible: false
+
+# External dependencies to ignore (they may have false positives)
+external-dependencies:
+  - package:swift-argument-parser
+
+# Report format (xcode, json, csv, checkstyle, codeclimate, sonarqube)
+reporter: xcode
+
+# Output file (optional)
+# output: periphery-report.json
+
+# Strict mode - treat warnings as errors
+strict: false
+
+# Enable verbose output
+verbose: false
+
+# Setup guide mode
+guidelines:
+  - "Swift Package Manager projects should use 'package' build configuration"
+  - "Run 'periphery scan --setup' to configure initial settings"

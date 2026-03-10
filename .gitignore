@@ -41,3 +41,21 @@ coverage/
 *.tmp
 *.temp
 *.log
+
+# Periphery
+.periphery-build.log
+periphery-report.json
+
+# SwiftLint
+.swiftlint-cache/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Archives
+*.zip
+*.tar.gz
+*.dmg
