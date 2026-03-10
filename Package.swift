@@ -33,5 +33,5 @@ let package = Package(
             path: "Tests/SpatialAudioCalibratorTests"
         ),
     ],
-    swiftLanguageVersions: [.v6]
+    swiftLanguageModes: [.v6]
 )
