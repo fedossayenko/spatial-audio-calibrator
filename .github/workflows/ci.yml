@@ -1,21 +1,20 @@
 # GitHub Actions CI for Spatial Audio Calibrator
 # https://docs.github.com/en/actions
-# Swift 6.0 / macOS 15 (March 2026)
+# Swift 6.1 (Xcode 16.4) / macOS 15 (March 2026)
 
 name: CI
 
 on:
-  push:
-    branches: [main, develop, 'feature/**']
   pull_request:
     branches: [main, develop]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Use head_ref for PRs, ref for pushes - prevents duplicate runs on same branch
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
-  SWIFT_VERSION: '6.0'
+  SWIFT_VERSION: '6.1'  # Matches Xcode 16.4 on macos-15 runner
 
 jobs:
   build:
@@ -27,10 +26,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Swift
-        uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: ${{ env.SWIFT_VERSION }}
+      # Use Swift bundled with Xcode 16.4 (Swift 6.1) instead of swift-actions/setup-swift
+      # swift-actions causes XCTestCore.framework loading issues on macOS-15 runners
 
       - name: Cache Swift packages
         uses: actions/cache@v4
