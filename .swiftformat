@@ -1,62 +1,17 @@
 # SwiftFormat Configuration for Spatial Audio Calibrator
 # https://github.com/nicklockwood/SwiftFormat
-# Version: 0.59.0 (March 2026)
+# Version: 0.59.0
 
-# Swift version
---swift-version 5.9
+--swiftversion 6
 
 # Indentation
 --indent 4
---indent-case false
 
 # Line length
---max-width 120
-
-# Spacing
---allman false
---extension-acl on-extension
---commas inline
---trimwhitespace always
-
-# Braces and wrapping
---closing-paren balanced
---wrap-arguments before-first
---wrap-collections before-first
---wrap-parameters before-first
---wrap-return-type if-multiline
---wrap-conditions before-first
---wrap-effects if-multiline
-
-# Imports
---import-grouping alpha
---header strip
-
-# Mark comments
---mark-types always
---mark-extensions always
-
-# Unused code
---stripunusedargs closure-only
---redundant-type explicit
-
-# Access control
---extension-acl on-extension
-
-# Code organization
---organize-types class,struct,enum,protocol,extension
+--maxwidth 120
 
 # Rules enabled
---enable \
-    organizeDeclarations,\
-    sortImports
-
-# Rules disabled
---disable \
-    trailingSpace,\
-    consecutiveBlankLines,\
-    blankLinesAroundMark,\
-    blankLineAfterImports,\
-    wrapMultilineStatementBraces
+--enable sortImports,organizeDeclarations
 
 # Exclude directories
 --exclude .build,.swiftpm,DerivedData,Pods

@@ -203,48 +203,9 @@ public enum CalibrationError: Error, LocalizedError, Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-
-        switch self {
-        case .noHDMIDevice:
-            try container.encode("noHDMIDevice", forKey: .type)
-        case let .unsupportedFormat(details):
-            try container.encode("unsupportedFormat", forKey: .type)
+        try container.encode(typeString, forKey: .type)
+        if let details = detailsValue {
             try container.encode(details, forKey: .details)
-        case let .configurationFailed(reason):
-            try container.encode("configurationFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case let .measurementFailed(reason):
-            try container.encode("measurementFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case let .processingFailed(reason):
-            try container.encode("processingFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case let .exportFailed(reason):
-            try container.encode("exportFailed", forKey: .type)
-            try container.encode(reason, forKey: .details)
-        case .permissionDenied:
-            try container.encode("permissionDenied", forKey: .type)
-        case .deviceBusy:
-            try container.encode("deviceBusy", forKey: .type)
-        case .engineNotRunning:
-            try container.encode("engineNotRunning", forKey: .type)
-        case .noMicrophoneAccess:
-            try container.encode("noMicrophoneAccess", forKey: .type)
-        case let .noSignal(speaker):
-            try container.encode("noSignal", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case let .clipping(speaker):
-            try container.encode("clipping", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case let .lowSNR(speaker, snr):
-            try container.encode("lowSNR", forKey: .type)
-            try container.encode("\(speaker.rawValue),\(snr)", forKey: .details)
-        case let .invalidTiming(speaker):
-            try container.encode("invalidTiming", forKey: .type)
-            try container.encode(speaker.rawValue, forKey: .details)
-        case let .abnormalRT60(speaker, rt60):
-            try container.encode("abnormalRT60", forKey: .type)
-            try container.encode("\(speaker.rawValue),\(rt60)", forKey: .details)
         }
     }
 
@@ -255,5 +216,46 @@ public enum CalibrationError: Error, LocalizedError, Codable {
     enum CodingKeys: String, CodingKey {
         case type
         case details
+    }
+
+    // MARK: Private
+
+    /// Type string for encoding
+    private var typeString: String {
+        switch self {
+        case .noHDMIDevice: "noHDMIDevice"
+        case .unsupportedFormat: "unsupportedFormat"
+        case .configurationFailed: "configurationFailed"
+        case .measurementFailed: "measurementFailed"
+        case .processingFailed: "processingFailed"
+        case .exportFailed: "exportFailed"
+        case .permissionDenied: "permissionDenied"
+        case .deviceBusy: "deviceBusy"
+        case .engineNotRunning: "engineNotRunning"
+        case .noMicrophoneAccess: "noMicrophoneAccess"
+        case .noSignal: "noSignal"
+        case .clipping: "clipping"
+        case .lowSNR: "lowSNR"
+        case .invalidTiming: "invalidTiming"
+        case .abnormalRT60: "abnormalRT60"
+        }
+    }
+
+    /// Details value for encoding (if applicable)
+    private var detailsValue: Encodable? {
+        switch self {
+        case let .unsupportedFormat(details): details
+        case let .configurationFailed(reason): reason
+        case let .measurementFailed(reason): reason
+        case let .processingFailed(reason): reason
+        case let .exportFailed(reason): reason
+        case let .noSignal(speaker): speaker.rawValue
+        case let .clipping(speaker): speaker.rawValue
+        case let .lowSNR(speaker, snr): "\(speaker.rawValue),\(snr)"
+        case let .invalidTiming(speaker): speaker.rawValue
+        case let .abnormalRT60(speaker, rt60): "\(speaker.rawValue),\(rt60)"
+        case .noHDMIDevice, .permissionDenied, .deviceBusy, .engineNotRunning, .noMicrophoneAccess:
+            nil
+        }
     }
 }

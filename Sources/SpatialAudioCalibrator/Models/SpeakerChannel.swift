@@ -7,7 +7,7 @@ import CoreAudio
 /// - Channel 2: Center
 /// - Channel 3: LFE (subwoofer)
 /// - Channels 4-5: Rear left/right (surround)
-public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable {
+public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable, Sendable {
     case frontLeft = 0
     case frontRight = 1
     case center = 2
@@ -78,7 +78,7 @@ public enum SpeakerChannel: Int, CaseIterable, Identifiable, Codable {
 }
 
 /// Speaker group classification
-public enum SpeakerGroup: String, CaseIterable, Codable {
+public enum SpeakerGroup: String, CaseIterable, Codable, Sendable {
     case frontStereo = "Front Stereo"
     case center = "Center"
     case subwoofer = "Subwoofer"

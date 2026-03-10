@@ -59,6 +59,7 @@ public final class SweepGenerator {
     public let amplitude: Float
 
     // MARK: - State Queries
+
     //
     // Note: These properties have a theoretical race with the audio thread.
     // This is acceptable as they're only used for UI updates and the race
@@ -114,7 +115,8 @@ public final class SweepGenerator {
         frameCount: AVAudioFrameCount,
         outputBufferList: UnsafeMutablePointer<AudioBufferList>
     )
-        -> OSStatus {
+        -> OSStatus
+    {
         // Quick check - lock-free for real-time safety
         guard isRunning else {
             // Output silence
@@ -211,6 +213,7 @@ public final class SweepGenerator {
     private let phaseConstant: Double
 
     // MARK: - State
+
     //
     // These variables are accessed from both the audio thread (render) and main thread.
     // The race is benign - at worst, UI shows slightly stale state.

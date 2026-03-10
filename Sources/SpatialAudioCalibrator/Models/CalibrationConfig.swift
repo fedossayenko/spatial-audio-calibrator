@@ -4,7 +4,7 @@ import Foundation
 ///
 /// This struct defines all adjustable parameters for the calibration process,
 /// including sweep generation, recording, and DSP processing settings.
-public struct CalibrationConfig: Codable {
+public struct CalibrationConfig: Codable, Sendable {
     // MARK: Lifecycle
 
     public init(

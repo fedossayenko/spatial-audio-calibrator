@@ -154,7 +154,17 @@ public final class AudioCalibrator: ObservableObject {
         // Set channel map for target speaker
         try engine.setChannelMap(target: speaker)
 
-        // Generate excitation signal
+        // Configure engine's sweep generator with same parameters as our generator
+        // This ensures the audio output matches the excitation signal used for deconvolution
+        engine.configureSweep(
+            startFrequency: config.startFrequency,
+            endFrequency: config.endFrequency,
+            duration: config.sweepDuration,
+            sampleRate: config.sampleRate,
+            amplitude: config.outputAmplitude
+        )
+
+        // Generate excitation signal (must match what we play)
         let excitation = sweepGenerator.generateBuffer()
 
         // Start engine
@@ -163,16 +173,16 @@ public final class AudioCalibrator: ObservableObject {
         // Start recording
         engine.startRecording()
 
-        // Play sweep
-        sweepGenerator.start()
+        // Start sweep playback through engine's audio output
+        engine.startSweep()
 
         // Wait for sweep + recording margin
         let totalDuration = config.totalRecordingDuration
         try await Task.sleep(nanoseconds: UInt64(totalDuration * 1_000_000_000))
 
-        // Stop recording
+        // Stop recording and sweep
         let recording = engine.stopRecording()
-        sweepGenerator.stop()
+        engine.stopSweep()
         engine.stop()
 
         state = .processing(speaker)
@@ -208,7 +218,7 @@ public final class AudioCalibrator: ObservableObject {
 
     /// Stop current calibration
     public func stopCalibration() {
-        sweepGenerator.stop()
+        audioEngine?.stopSweep()
         audioEngine?.stop()
         audioEngine?.stopRecording()
         state = .idle
@@ -255,7 +265,7 @@ public final class AudioCalibrator: ObservableObject {
                 "c80": measurement.analysis.c80,
                 "c50": measurement.analysis.c50,
                 "snr": Double(measurement.snr),
-                "isValid": measurement.isValid
+                "isValid": measurement.isValid,
             ]
         }
 

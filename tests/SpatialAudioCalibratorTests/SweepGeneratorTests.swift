@@ -1,11 +1,10 @@
 import Foundation
-import XCTest
 @testable import SpatialAudioCalibrator
+import XCTest
 
 // MARK: - FFTProcessor Tests
 
 final class FFTProcessorTests: XCTestCase {
-
     // MARK: - Initialization Tests
 
     func testFFTInitializationWithValidSize() throws {
@@ -63,7 +62,7 @@ final class FFTProcessorTests: XCTestCase {
         let binIndex = Int(frequency / sampleRate * Double(fftSize))
 
         var sineWave = [Float](repeating: 0, count: fftSize)
-        for i in 0..<fftSize {
+        for i in 0 ..< fftSize {
             sineWave[i] = Float(sin(2.0 * Double.pi * frequency * Double(i) / sampleRate))
         }
 
@@ -71,7 +70,8 @@ final class FFTProcessorTests: XCTestCase {
 
         // Peak should be at expected bin
         let magnitudes = processor.magnitude(real: real, imag: imag)
-        let peakBin = magnitudes.enumerated().max(by: { $0.element < $1.element })?.offset ?? 0
+        // swiftlint:disable:next unused_enumerated
+        let peakBin = magnitudes.enumerated().max { $0.element < $1.element }?.offset ?? 0
 
         XCTAssertEqual(peakBin, binIndex, "Peak should be at bin \(binIndex) for \(frequency) Hz")
     }
@@ -84,7 +84,7 @@ final class FFTProcessorTests: XCTestCase {
         let (real, imag) = processor.forwardFFT(silence)
 
         // All bins should be zero
-        for i in 0..<fftSize {
+        for i in 0 ..< fftSize {
             XCTAssertLessThan(abs(real[i]), 0.0001, "Real part should be zero at bin \(i)")
             XCTAssertLessThan(abs(imag[i]), 0.0001, "Imaginary part should be zero at bin \(i)")
         }
@@ -98,7 +98,7 @@ final class FFTProcessorTests: XCTestCase {
 
         // Original signal - simple sine wave
         var original = [Float](repeating: 0, count: fftSize)
-        for i in 0..<fftSize {
+        for i in 0 ..< fftSize {
             original[i] = Float(sin(2.0 * Double.pi * 440.0 * Double(i) / 48000.0))
         }
 
@@ -107,7 +107,7 @@ final class FFTProcessorTests: XCTestCase {
         let reconstructed = processor.inverseFFT(real: real, imag: imag)
 
         // Should reconstruct original signal
-        for i in 0..<min(100, fftSize) {
+        for i in 0 ..< min(100, fftSize) {
             XCTAssertLessThan(
                 abs(original[i] - reconstructed[i]),
                 0.001,
@@ -156,7 +156,6 @@ final class FFTProcessorTests: XCTestCase {
 // MARK: - DeconvolutionEngine Tests
 
 final class DeconvolutionEngineTests: XCTestCase {
-
     // MARK: - Basic Deconvolution Tests
 
     func testDeconvolutionOfIdentitySystem() async throws {
@@ -182,7 +181,8 @@ final class DeconvolutionEngineTests: XCTestCase {
         XCTAssertEqual(ir.speaker, .frontLeft, "Speaker should match")
 
         // Peak should be at or near start
-        let peakIndex = ir.samples.enumerated().max(by: { abs($0.element) < abs($1.element) })?.offset ?? -1
+        // swiftlint:disable:next unused_enumerated
+        let peakIndex = ir.samples.enumerated().max { abs($0.element) < abs($1.element) }?.offset ?? -1
         XCTAssertLessThan(peakIndex, 10, "Peak should be near start for identity system")
     }
 
@@ -244,7 +244,7 @@ final class DeconvolutionEngineTests: XCTestCase {
         XCTAssertFalse(progressValues.isEmpty, "Should have progress updates")
 
         // Progress should be increasing
-        for i in 1..<progressValues.count {
+        for i in 1 ..< progressValues.count {
             XCTAssertGreaterThanOrEqual(progressValues[i], progressValues[i - 1], "Progress should increase")
         }
 
@@ -256,7 +256,6 @@ final class DeconvolutionEngineTests: XCTestCase {
 // MARK: - ImpulseResponse Tests
 
 final class ImpulseResponseTests: XCTestCase {
-
     // MARK: - Initialization Tests
 
     func testImpulseResponseInitialization() {
@@ -355,7 +354,7 @@ final class ImpulseResponseTests: XCTestCase {
         samples[0] = 1.0 // Direct sound at t=0
 
         // Add some decay
-        for i in 1..<1000 {
+        for i in 1 ..< 1000 {
             samples[i] = Float(exp(-Double(i) / 100.0))
         }
 
@@ -416,7 +415,7 @@ final class ImpulseResponseTests: XCTestCase {
     func testEnergyDecayCurveIsMonotonic() {
         var samples = [Float](repeating: 0, count: 1000)
         samples[0] = 1.0
-        for i in 1..<1000 {
+        for i in 1 ..< 1000 {
             samples[i] = Float(exp(-Double(i) / 100.0))
         }
 
@@ -430,7 +429,7 @@ final class ImpulseResponseTests: XCTestCase {
         let curve = ir.energyDecayCurve()
 
         // Curve should be monotonically decreasing
-        for i in 1..<curve.count {
+        for i in 1 ..< curve.count {
             XCTAssertLessThanOrEqual(curve[i], curve[i - 1] + 0.001, "Decay curve should be monotonic")
         }
     }
@@ -439,7 +438,6 @@ final class ImpulseResponseTests: XCTestCase {
 // MARK: - WAVEExporter Tests
 
 final class WAVEExporterTests: XCTestCase {
-
     func testExportCreatesValidWAVFile() throws {
         let samples: [Float] = [0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5, 0.0]
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("test_\(UUID()).wav")
@@ -472,24 +470,24 @@ final class WAVEExporterTests: XCTestCase {
         let data = try Data(contentsOf: tempURL)
 
         // Check RIFF header
-        XCTAssertEqual(data[0...3], Data("RIFF".utf8), "Should have RIFF header")
+        XCTAssertEqual(data[0 ... 3], Data("RIFF".utf8), "Should have RIFF header")
 
         // Check WAVE format
-        XCTAssertEqual(data[8...11], Data("WAVE".utf8), "Should have WAVE format")
+        XCTAssertEqual(data[8 ... 11], Data("WAVE".utf8), "Should have WAVE format")
 
         // Check fmt chunk
-        XCTAssertEqual(data[12...15], Data("fmt ".utf8), "Should have fmt chunk")
+        XCTAssertEqual(data[12 ... 15], Data("fmt ".utf8), "Should have fmt chunk")
 
         // Check audio format (3 = IEEE float)
-        let audioFormat = data[20...21].withUnsafeBytes { $0.load(as: UInt16.self) }
+        let audioFormat = data[20 ... 21].withUnsafeBytes { $0.load(as: UInt16.self) }
         XCTAssertEqual(audioFormat, 3, "Audio format should be IEEE float (3)")
 
         // Check sample rate
-        let sampleRate = data[24...27].withUnsafeBytes { $0.load(as: UInt32.self) }
+        let sampleRate = data[24 ... 27].withUnsafeBytes { $0.load(as: UInt32.self) }
         XCTAssertEqual(sampleRate, 44100, "Sample rate should be 44100")
 
         // Check data chunk
-        XCTAssertEqual(data[36...39], Data("data".utf8), "Should have data chunk")
+        XCTAssertEqual(data[36 ... 39], Data("data".utf8), "Should have data chunk")
     }
 
     func testExportOverwritesExistingFile() throws {
@@ -509,7 +507,7 @@ final class WAVEExporterTests: XCTestCase {
 
         // Read back and verify it's the second file
         let data = try Data(contentsOf: tempURL)
-        let dataSize = data[40...43].withUnsafeBytes { $0.load(as: UInt32.self) }
+        let dataSize = data[40 ... 43].withUnsafeBytes { $0.load(as: UInt32.self) }
 
         // samples2 has 4 floats = 16 bytes
         XCTAssertEqual(Int(dataSize), samples2.count * 4, "Should have second file's data")
@@ -519,7 +517,6 @@ final class WAVEExporterTests: XCTestCase {
 // MARK: - CalibrationError Tests
 
 final class CalibrationErrorTests: XCTestCase {
-
     func testErrorDescriptions() {
         XCTAssertNotNil(CalibrationError.noHDMIDevice.errorDescription)
         XCTAssertNotNil(CalibrationError.permissionDenied.errorDescription)
@@ -547,7 +544,7 @@ final class CalibrationErrorTests: XCTestCase {
             .clipping(.center),
             .lowSNR(.rearLeft, 35.5),
             .invalidTiming(.rearRight),
-            .abnormalRT60(.lfe, 10.0)
+            .abnormalRT60(.lfe, 10.0),
         ]
 
         for originalError in errors {
@@ -579,12 +576,11 @@ final class CalibrationErrorTests: XCTestCase {
 // MARK: - AcousticParameters Tests
 
 final class AcousticParametersTests: XCTestCase {
-
     func testAnalyzeSimpleImpulse() {
         // Create a simple impulse response
         var samples = [Float](repeating: 0, count: 48000)
         samples[0] = 1.0
-        for i in 1..<4800 { // 100ms decay
+        for i in 1 ..< 4800 { // 100ms decay
             samples[i] = Float(exp(-Double(i) / 500.0))
         }
 
@@ -610,12 +606,12 @@ final class AcousticParametersTests: XCTestCase {
         samples[0] = 1.0
 
         // Strong early energy (first 50ms = 2400 samples at 48kHz)
-        for i in 1..<2400 {
+        for i in 1 ..< 2400 {
             samples[i] = 0.5 * Float(exp(-Double(i) / 1000.0))
         }
 
         // Weak late energy
-        for i in 2400..<48000 {
+        for i in 2400 ..< 48000 {
             samples[i] = 0.01 * Float(exp(-Double(i - 2400) / 5000.0))
         }
 
@@ -640,8 +636,7 @@ final class AcousticParametersTests: XCTestCase {
 // MARK: - Sweep Generator Tests (Existing, kept for reference)
 
 final class SweepGeneratorTests: XCTestCase {
-
-    func testFrequencyRange() async throws {
+    func testFrequencyRange() {
         let generator = SweepGenerator(
             startFrequency: 20,
             endFrequency: 20000,
@@ -660,7 +655,7 @@ final class SweepGeneratorTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(peak, 0.75, "Peak amplitude should be close to configured amplitude")
     }
 
-    func testStartStop() async throws {
+    func testStartStop() {
         let generator = SweepGenerator(
             startFrequency: 100,
             endFrequency: 1000,
@@ -677,7 +672,7 @@ final class SweepGeneratorTests: XCTestCase {
         XCTAssertFalse(generator.running, "Should not be running after stop")
     }
 
-    func testProgress() async throws {
+    func testProgress() {
         let generator = SweepGenerator(
             duration: 1.0,
             sampleRate: 48000
@@ -696,14 +691,13 @@ final class SweepGeneratorTests: XCTestCase {
 // MARK: - Math Helpers Tests
 
 final class MathHelpersTests: XCTestCase {
-
     func testNextPowerOf2() {
         XCTAssertEqual(MathHelpers.nextPowerOf2(1), 1)
         XCTAssertEqual(MathHelpers.nextPowerOf2(2), 2)
         XCTAssertEqual(MathHelpers.nextPowerOf2(3), 4)
         XCTAssertEqual(MathHelpers.nextPowerOf2(100), 128)
         XCTAssertEqual(MathHelpers.nextPowerOf2(1000), 1024)
-        XCTAssertEqual(MathHelpers.nextPowerOf2(100000), 131072)
+        XCTAssertEqual(MathHelpers.nextPowerOf2(100_000), 131_072)
     }
 
     func testIsPowerOf2() {
@@ -749,7 +743,6 @@ final class MathHelpersTests: XCTestCase {
 // MARK: - Calibration Config Tests
 
 final class CalibrationConfigTests: XCTestCase {
-
     func testDefaultConfigIsValid() {
         let config = CalibrationConfig.default
         let errors = config.validate()
@@ -784,7 +777,6 @@ final class CalibrationConfigTests: XCTestCase {
 // MARK: - Speaker Channel Tests
 
 final class SpeakerChannelTests: XCTestCase {
-
     func testAllChannelsAreAvailable() {
         let channels = SpeakerChannel.allCases
         XCTAssertEqual(channels.count, 6, "Should have 6 channels for 5.1")
@@ -802,3 +794,125 @@ final class SpeakerChannelTests: XCTestCase {
         XCTAssertEqual(SpeakerChannel.rearRight.shortName, "RR")
     }
 }
+
+// MARK: - Calibration State Tests
+
+final class CalibrationStateTests: XCTestCase {
+    func testInitialStateIsIdle() {
+        let state = CalibrationState.idle
+        XCTAssertFalse(state.isActive)
+        XCTAssertNil(state.currentSpeaker)
+    }
+
+    func testActiveStates() {
+        let activeStates: [CalibrationState] = [
+            .initializing,
+            .verifying,
+            .measuring(.frontLeft),
+            .processing(.center),
+        ]
+
+        for state in activeStates {
+            XCTAssertTrue(state.isActive, "\(state) should be active")
+        }
+    }
+
+    func testInactiveStates() {
+        let inactiveStates: [CalibrationState] = [
+            .idle,
+            .ready,
+            .completed,
+            .error(.noHDMIDevice),
+        ]
+
+        for state in inactiveStates {
+            XCTAssertFalse(state.isActive, "\(state) should not be active")
+        }
+    }
+
+    func testCurrentSpeakerExtraction() {
+        let measuringState = CalibrationState.measuring(.frontRight)
+        XCTAssertEqual(measuringState.currentSpeaker, .frontRight)
+
+        let processingState = CalibrationState.processing(.lfe)
+        XCTAssertEqual(processingState.currentSpeaker, .lfe)
+
+        let idleState = CalibrationState.idle
+        XCTAssertNil(idleState.currentSpeaker)
+    }
+
+    func testStateEquality() {
+        XCTAssertEqual(CalibrationState.idle, CalibrationState.idle)
+        XCTAssertEqual(CalibrationState.ready, CalibrationState.ready)
+        XCTAssertEqual(CalibrationState.measuring(.frontLeft), CalibrationState.measuring(.frontLeft))
+        XCTAssertNotEqual(CalibrationState.measuring(.frontLeft), CalibrationState.measuring(.frontRight))
+    }
+
+    func testStateDescriptions() {
+        XCTAssertFalse(CalibrationState.idle.description.isEmpty)
+        XCTAssertFalse(CalibrationState.ready.description.isEmpty)
+        XCTAssertFalse(CalibrationState.measuring(.center).description.isEmpty)
+        XCTAssertFalse(CalibrationState.completed.description.isEmpty)
+    }
+}
+
+// MARK: - Sweep Generator Consistency Tests
+
+final class SweepGeneratorConsistencyTests: XCTestCase {
+    /// Verify that generateBuffer() produces correct length
+    func testGenerateBufferProducesCorrectLength() {
+        let sampleRate = 48000.0
+        let durations = [0.5, 1.0, 2.0, 5.0]
+
+        for duration in durations {
+            let generator = SweepGenerator(
+                duration: duration,
+                sampleRate: sampleRate
+            )
+
+            let buffer = generator.generateBuffer()
+            let expectedCount = Int(duration * sampleRate)
+
+            XCTAssertEqual(
+                buffer.count,
+                expectedCount,
+                "Buffer should have \(expectedCount) samples for \(duration)s at \(sampleRate)Hz"
+            )
+        }
+    }
+
+    func testGeneratorStartFrequencyMatchesConfig() {
+        let configs: [(start: Double, end: Double)] = [
+            (20, 20000),
+            (100, 10000),
+            (50, 5000),
+        ]
+
+        for config in configs {
+            let generator = SweepGenerator(
+                startFrequency: config.start,
+                endFrequency: config.end,
+                duration: 1.0,
+                sampleRate: 48000
+            )
+
+            // At t=0, frequency should be startFrequency
+            generator.start()
+            let freq = generator.currentFrequency
+
+            // Allow some tolerance due to timing
+            XCTAssertGreaterThan(
+                freq,
+                config.start * 0.9,
+                "Initial frequency should be near start frequency \(config.start)"
+            )
+            XCTAssertLessThan(
+                freq,
+                config.start * 1.1,
+                "Initial frequency should be near start frequency \(config.start)"
+            )
+        }
+    }
+}
+
+// MARK: - Calibration Config Consistency Tests

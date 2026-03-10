@@ -41,7 +41,8 @@ public final class DeconvolutionEngine {
         sampleRate: Double,
         speaker: SpeakerChannel
     )
-        throws -> ImpulseResponse {
+        throws -> ImpulseResponse
+    {
         try extractImpulseResponse(
             excitation: excitation,
             recording: recording,
@@ -59,7 +60,8 @@ public final class DeconvolutionEngine {
         speaker: SpeakerChannel,
         progress: ((Double) -> Void)?
     )
-        throws -> ImpulseResponse {
+        throws -> ImpulseResponse
+    {
         // Calculate required FFT size
         let minLength = excitation.count + recording.count - 1
         let requiredFFTSize = MathHelpers.nextPowerOf2(minLength)
@@ -130,7 +132,8 @@ public final class DeconvolutionEngine {
         excitationReal: [Float],
         excitationImag: [Float]
     )
-        -> (real: [Float], imag: [Float]) {
+        -> (real: [Float], imag: [Float])
+    {
         let count = min(
             min(recordingReal.count, recordingImag.count),
             min(excitationReal.count, excitationImag.count)

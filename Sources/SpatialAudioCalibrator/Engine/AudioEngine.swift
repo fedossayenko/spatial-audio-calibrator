@@ -168,17 +168,24 @@ public final class AudioEngine {
     // MARK: - Sweep Playback
 
     /// Configure sweep parameters
+    /// - Parameters:
+    ///   - startFrequency: Start frequency in Hz
+    ///   - endFrequency: End frequency in Hz
+    ///   - duration: Sweep duration in seconds
+    ///   - sampleRate: Sample rate for the sweep
+    ///   - amplitude: Output amplitude (0-1)
     public func configureSweep(
         startFrequency: Double,
         endFrequency: Double,
         duration: Double,
+        sampleRate: Double,
         amplitude: Float
     ) {
         sweepGenerator = SweepGenerator(
             startFrequency: startFrequency,
             endFrequency: endFrequency,
             duration: duration,
-            sampleRate: 48000,
+            sampleRate: sampleRate,
             amplitude: amplitude
         )
     }

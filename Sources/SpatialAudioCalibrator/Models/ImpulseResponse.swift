@@ -1,5 +1,25 @@
 import Foundation
 
+/// A single point in a frequency response curve.
+public struct FrequencyResponsePoint: Codable, Equatable {
+    // MARK: Lifecycle
+
+    public init(frequency: Double, magnitude: Double, phase: Double) {
+        self.frequency = frequency
+        self.magnitude = magnitude
+        self.phase = phase
+    }
+
+    // MARK: Public
+
+    /// Frequency in Hz
+    public let frequency: Double
+    /// Magnitude in dB
+    public let magnitude: Double
+    /// Phase in radians
+    public let phase: Double
+}
+
 /// Represents a measured Room Impulse Response (RIR).
 ///
 /// The impulse response captures the acoustic characteristics of a speaker
@@ -67,14 +87,15 @@ public struct ImpulseResponse: Codable, Identifiable {
 
     /// Get frequency response at specified frequencies
     /// - Parameter frequencies: Array of frequencies to analyze (Hz)
-    /// - Returns: Array of (frequency, magnitude in dB, phase in radians) tuples
+    /// - Returns: Array of FrequencyResponsePoint containing frequency, magnitude (dB), and phase (radians)
     public func frequencyResponse(
         frequencies: [Double]
     )
-        -> [(frequency: Double, magnitude: Double, phase: Double)] {
+        -> [FrequencyResponsePoint]
+    {
         // Need enough samples for FFT
         guard !samples.isEmpty else {
-            return frequencies.map { ($0, -100, 0) }
+            return frequencies.map { FrequencyResponsePoint(frequency: $0, magnitude: -100, phase: 0) }
         }
 
         // Calculate FFT size (power of 2, at least as large as samples)
@@ -82,7 +103,7 @@ public struct ImpulseResponse: Codable, Identifiable {
 
         // Create FFT processor
         guard let fftProcessor = try? FFTProcessor(fftSize: fftSize) else {
-            return frequencies.map { ($0, -100, 0) }
+            return frequencies.map { FrequencyResponsePoint(frequency: $0, magnitude: -100, phase: 0) }
         }
 
         // Zero-pad samples to FFT size
@@ -103,19 +124,19 @@ public struct ImpulseResponse: Codable, Identifiable {
         return frequencies.map { freq in
             // Clamp to valid range
             guard freq > 0, freq < nyquist else {
-                return (frequency: freq, magnitude: -100, phase: 0)
+                return FrequencyResponsePoint(frequency: freq, magnitude: -100, phase: 0)
             }
 
             // Find nearest bin
             let bin = Int(freq / binWidth)
             guard bin < magnitudes.count else {
-                return (frequency: freq, magnitude: -100, phase: 0)
+                return FrequencyResponsePoint(frequency: freq, magnitude: -100, phase: 0)
             }
 
             // Convert magnitude to dB
             let magDB = 20 * log10(max(Double(magnitudes[bin]), 1e-10))
 
-            return (frequency: freq, magnitude: magDB, phase: Double(phases[bin]))
+            return FrequencyResponsePoint(frequency: freq, magnitude: magDB, phase: Double(phases[bin]))
         }
     }
 
