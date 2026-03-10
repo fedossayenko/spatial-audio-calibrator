@@ -1,73 +1,62 @@
 # SwiftFormat Configuration for Spatial Audio Calibrator
 # https://github.com/nicklockwood/SwiftFormat
+# Version: 0.59.0 (March 2026)
 
 # Swift version
---swiftversion 5.9
+--swift-version 5.9
 
 # Indentation
 --indent 4
---indentcase false
---tabwidth 4
+--indent-case false
 
 # Line length
---maxwidth 120
+--max-width 120
 
 # Spacing
 --allman false
---extensionacl on-extension
+--extension-acl on-extension
 --commas inline
 --trimwhitespace always
---insertcr false
 
-# Braces
---closingbrace balanced
---wraparguments before-first
---wrapcollections before-first
---wrapparameters before-first
---wrapreturntype if-multiline
---wrapconditions before-first
---wrapeffects if-multiline
+# Braces and wrapping
+--closing-paren balanced
+--wrap-arguments before-first
+--wrap-collections before-first
+--wrap-parameters before-first
+--wrap-return-type if-multiline
+--wrap-conditions before-first
+--wrap-effects if-multiline
 
 # Imports
---importspacing true
+--import-grouping alpha
 --header strip
 
 # Mark comments
---marktypes always
---markextensions always
---marks generic
+--mark-types always
+--mark-extensions always
 
 # Unused code
 --stripunusedargs closure-only
---redundanttype explicit
+--redundant-type explicit
 
 # Access control
---aclblockorder private,fileprivate,internal,public,open
+--extension-acl on-extension
 
 # Code organization
---organizetypes class,struct,enum,protocol,extension
---typeorder class,struct,enum,protocol,extension
+--organize-types class,struct,enum,protocol,extension
 
 # Rules enabled
 --enable \
     organizeDeclarations,\
-    sortImports,\
-    spaceInsideBraces,\
-    spaceInsideGenerics,\
-    spaceInsideParens,\
-    spaceAroundBraces,\
-    spaceAroundOperators,\
-    spaceInsideBrackets
+    sortImports
 
 # Rules disabled
 --disable \
     trailingSpace,\
     consecutiveBlankLines,\
     blankLinesAroundMark,\
-    blankLineAfterImports
-
-# File header (optional - uncomment to use)
-# --header "Copyright © 2025. All rights reserved."
+    blankLineAfterImports,\
+    wrapMultilineStatementBraces
 
 # Exclude directories
 --exclude .build,.swiftpm,DerivedData,Pods

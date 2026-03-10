@@ -10,41 +10,7 @@ import Foundation
 /// - Sweep signal playback
 /// - Microphone input recording
 public final class AudioEngine {
-
-    // MARK: - Properties
-
-    /// The underlying AVAudioEngine instance
-    public let engine = AVAudioEngine()
-
-    /// Whether the engine is currently running
-    public private(set) var isRunning = false
-
-    /// Output audio format (5.1 surround at 48kHz)
-    public private(set) var outputFormat: AVAudioFormat?
-
-    /// Input audio format from microphone
-    public var inputFormat: AVAudioFormat? {
-        engine.inputNode.outputFormat(forBus: 0)
-    }
-
-    /// Sweep generator instance
-    private var sweepGenerator: SweepGenerator?
-
-    /// Source node for sweep playback
-    private var sourceNode: AVAudioSourceNode?
-
-    /// Configured output device ID
-    private var outputDeviceID: AudioDeviceID?
-
-    /// Current latency information
-    public private(set) var latencyInfo: BufferConfiguration?
-
-    // MARK: - Recording State
-
-    private var recordingBuffer: [Float] = []
-    private var isRecording = false
-    private var recordingStartTime: AVAudioTime?
-    private let recordingLock = NSLock()
+    // MARK: Lifecycle
 
     // MARK: - Initialization
 
@@ -62,62 +28,35 @@ public final class AudioEngine {
         removeInputTap()
     }
 
-    // MARK: - Configuration
+    // MARK: Public
 
-    private func configureEngine() throws {
-        // Define 5.1 surround format
-        guard let channelLayout = AVAudioChannelLayout(
-            layoutTag: kAudioChannelLayoutTag_MPEG_5_1_A
-        ) else {
-            throw CalibrationError.configurationFailed("Failed to create 5.1 channel layout")
-        }
+    /// The underlying AVAudioEngine instance
+    public let engine = AVAudioEngine()
 
-        let format = AVAudioFormat(
-            standardFormatWithSampleRate: 48000,
-            channelLayout: channelLayout
-        )
+    /// Whether the engine is currently running
+    public private(set) var isRunning = false
 
-        self.outputFormat = format
+    /// Output audio format (5.1 surround at 48kHz)
+    public private(set) var outputFormat: AVAudioFormat?
 
-        // Set output device if specified
-        if let deviceID = outputDeviceID {
-            try setOutputDevice(deviceID)
-        }
+    /// Current latency information
+    public private(set) var latencyInfo: BufferConfiguration?
 
-        // Create sweep generator
-        sweepGenerator = SweepGenerator(
-            startFrequency: 20,
-            endFrequency: 20000,
-            duration: 5.0,
-            sampleRate: 48000,
-            amplitude: 0.8
-        )
+    /// Input audio format from microphone
+    public var inputFormat: AVAudioFormat? {
+        engine.inputNode.outputFormat(forBus: 0)
+    }
 
-        // Create source node with 5.1 format
-        guard sweepGenerator != nil else {
-            throw CalibrationError.configurationFailed("Failed to create sweep generator")
-        }
+    /// Check if sweep is currently playing
+    public var isSweepPlaying: Bool {
+        sweepGenerator?.running ?? false
+    }
 
-        sourceNode = AVAudioSourceNode(
-            format: format
-        ) { [weak self] _, _, frameCount, outputBufferList in
-            guard let self = self, let generator = self.sweepGenerator else {
-                return noErr
-            }
-            return generator.render(frameCount: frameCount, outputBufferList: outputBufferList)
-        }
-
-        guard let sourceNode = sourceNode else {
-            throw CalibrationError.configurationFailed("Failed to create source node")
-        }
-
-        // Attach and connect nodes
-        engine.attach(sourceNode)
-        engine.connect(sourceNode, to: engine.mainMixerNode, format: format)
-        engine.connect(engine.mainMixerNode, to: engine.outputNode, format: format)
-
-        // Prepare engine
-        engine.prepare()
+    /// Check if currently recording
+    public var isCurrentlyRecording: Bool {
+        recordingLock.lock()
+        defer { recordingLock.unlock() }
+        return isRecording
     }
 
     /// Set the output audio device
@@ -156,18 +95,6 @@ public final class AudioEngine {
         }
     }
 
-    private func measureLatency() throws {
-        guard let deviceID = outputDeviceID ?? AudioDeviceManager.getDefaultOutputDevice() else {
-            throw CalibrationError.noHDMIDevice
-        }
-
-        guard let config = AudioDeviceManager.getBufferConfiguration(deviceID) else {
-            throw CalibrationError.configurationFailed("Failed to get buffer configuration")
-        }
-
-        self.latencyInfo = config
-    }
-
     // MARK: - Engine Control
 
     /// Start the audio engine
@@ -196,7 +123,7 @@ public final class AudioEngine {
         // Build channel map array
         // Index = destination channel, Value = source channel (-1 = mute)
         var channelMap: [Int32] = [-1, -1, -1, -1, -1, -1]
-        channelMap[target.rawValue] = 0  // Route mono source (channel 0) to target
+        channelMap[target.rawValue] = 0 // Route mono source (channel 0) to target
 
         let status = AudioUnitSetProperty(
             audioUnit,
@@ -267,11 +194,6 @@ public final class AudioEngine {
         sweepGenerator?.stop()
     }
 
-    /// Check if sweep is currently playing
-    public var isSweepPlaying: Bool {
-        sweepGenerator?.running ?? false
-    }
-
     // MARK: - Input Recording
 
     /// Install tap on input node for recording
@@ -296,22 +218,6 @@ public final class AudioEngine {
     /// Remove input tap
     public func removeInputTap() {
         engine.inputNode.removeTap(onBus: 0)
-    }
-
-    private func processInputBuffer(_ buffer: AVAudioPCMBuffer) {
-        recordingLock.lock()
-        defer { recordingLock.unlock() }
-
-        guard isRecording else { return }
-
-        // Get first channel data
-        guard let channelData = buffer.floatChannelData?[0] else { return }
-
-        // Copy samples to recording buffer
-        let frameCount = Int(buffer.frameLength)
-        recordingBuffer.append(
-            contentsOf: UnsafeBufferPointer(start: channelData, count: frameCount)
-        )
     }
 
     /// Start recording
@@ -341,13 +247,6 @@ public final class AudioEngine {
         return recordingBuffer
     }
 
-    /// Check if currently recording
-    public var isCurrentlyRecording: Bool {
-        recordingLock.lock()
-        defer { recordingLock.unlock() }
-        return isRecording
-    }
-
     // MARK: - Latency Compensation
 
     /// Compensate recording for measured latency
@@ -360,6 +259,112 @@ public final class AudioEngine {
         guard latencySamples < recording.count else { return [] }
 
         return Array(recording.dropFirst(latencySamples))
+    }
+
+    // MARK: Private
+
+    /// Sweep generator instance
+    private var sweepGenerator: SweepGenerator?
+
+    /// Source node for sweep playback
+    private var sourceNode: AVAudioSourceNode?
+
+    /// Configured output device ID
+    private var outputDeviceID: AudioDeviceID?
+
+    // MARK: - Recording State
+
+    private var recordingBuffer: [Float] = []
+    private var isRecording = false
+    private var recordingStartTime: AVAudioTime?
+    private let recordingLock = NSLock()
+
+    // MARK: - Configuration
+
+    private func configureEngine() throws {
+        // Define 5.1 surround format
+        guard
+            let channelLayout = AVAudioChannelLayout(
+                layoutTag: kAudioChannelLayoutTag_MPEG_5_1_A
+            )
+        else {
+            throw CalibrationError.configurationFailed("Failed to create 5.1 channel layout")
+        }
+
+        let format = AVAudioFormat(
+            standardFormatWithSampleRate: 48000,
+            channelLayout: channelLayout
+        )
+
+        outputFormat = format
+
+        // Set output device if specified
+        if let deviceID = outputDeviceID {
+            try setOutputDevice(deviceID)
+        }
+
+        // Create sweep generator
+        sweepGenerator = SweepGenerator(
+            startFrequency: 20,
+            endFrequency: 20000,
+            duration: 5.0,
+            sampleRate: 48000,
+            amplitude: 0.8
+        )
+
+        // Create source node with 5.1 format
+        guard sweepGenerator != nil else {
+            throw CalibrationError.configurationFailed("Failed to create sweep generator")
+        }
+
+        sourceNode = AVAudioSourceNode(
+            format: format
+        ) { [weak self] _, _, frameCount, outputBufferList in
+            guard let self, let generator = sweepGenerator else {
+                return noErr
+            }
+            return generator.render(frameCount: frameCount, outputBufferList: outputBufferList)
+        }
+
+        guard let sourceNode else {
+            throw CalibrationError.configurationFailed("Failed to create source node")
+        }
+
+        // Attach and connect nodes
+        engine.attach(sourceNode)
+        engine.connect(sourceNode, to: engine.mainMixerNode, format: format)
+        engine.connect(engine.mainMixerNode, to: engine.outputNode, format: format)
+
+        // Prepare engine
+        engine.prepare()
+    }
+
+    private func measureLatency() throws {
+        guard let deviceID = outputDeviceID ?? AudioDeviceManager.getDefaultOutputDevice() else {
+            throw CalibrationError.noHDMIDevice
+        }
+
+        guard let config = AudioDeviceManager.getBufferConfiguration(deviceID) else {
+            throw CalibrationError.configurationFailed("Failed to get buffer configuration")
+        }
+
+        latencyInfo = config
+    }
+
+    private func processInputBuffer(_ buffer: AVAudioPCMBuffer) {
+        recordingLock.lock()
+        defer { recordingLock.unlock() }
+
+        guard isRecording else { return }
+
+        // Get first channel data
+        guard let channelData = buffer.floatChannelData?[0] else { return }
+
+        // Copy samples to recording buffer
+        let frameCount = Int(buffer.frameLength)
+        recordingBuffer.append(
+            contentsOf: UnsafeBufferPointer(start: channelData, count: frameCount)
+        )
     }
 }
 

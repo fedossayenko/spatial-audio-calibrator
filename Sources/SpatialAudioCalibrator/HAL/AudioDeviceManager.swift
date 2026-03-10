@@ -6,6 +6,7 @@ import Foundation
 /// Provides static methods for enumerating, querying, and configuring
 /// audio devices using the Core Audio Hardware Abstraction Layer.
 public enum AudioDeviceManager {
+    // MARK: Public
 
     // MARK: - Device Enumeration
 
@@ -390,36 +391,38 @@ public enum AudioDeviceManager {
     public static func errorMessage(_ status: OSStatus) -> String {
         switch status {
         case kAudioHardwareNoError:
-            return "No error"
+            "No error"
         case kAudioHardwareNotRunningError:
-            return "Hardware not running"
+            "Hardware not running"
         case kAudioHardwareUnspecifiedError:
-            return "Unspecified error"
+            "Unspecified error"
         case kAudioHardwareUnknownPropertyError:
-            return "Unknown property"
+            "Unknown property"
         case kAudioHardwareBadPropertySizeError:
-            return "Bad property size"
+            "Bad property size"
         case kAudioHardwareIllegalOperationError:
-            return "Illegal operation"
+            "Illegal operation"
         case kAudioHardwareBadDeviceError:
-            return "Bad device"
+            "Bad device"
         case kAudioHardwareBadStreamError:
-            return "Bad stream"
+            "Bad stream"
         case kAudioHardwareUnsupportedOperationError:
-            return "Unsupported operation"
+            "Unsupported operation"
         case kAudioDeviceUnsupportedFormatError:
-            return "Unsupported format"
+            "Unsupported format"
         case kAudioDevicePermissionsError:
-            return "Permission denied"
+            "Permission denied"
         default:
-            return "Unknown error: \(status)"
+            "Unknown error: \(status)"
         }
     }
 
+    // MARK: Private
+
     private static func logError(_ message: String) {
         #if DEBUG
-        // swiftlint:disable:next no_print_statements
-        print("[AudioDeviceManager] \(message)")
+            // swiftlint:disable:next no_print_statements
+            print("[AudioDeviceManager] \(message)")
         #endif
     }
 }
@@ -454,6 +457,30 @@ public struct BufferConfiguration: Codable {
 
 /// Convenient device information struct
 public struct AudioDeviceInfo: Codable, Identifiable {
+    // MARK: Lifecycle
+
+    public init?(deviceID: AudioDeviceID) {
+        id = deviceID
+
+        guard
+            let name = AudioDeviceManager.getName(deviceID),
+            let uid = AudioDeviceManager.getUID(deviceID)
+        else {
+            return nil
+        }
+
+        self.name = name
+        self.uid = uid
+        transportType = AudioDeviceManager.getTransportType(deviceID) ?? 0
+        sampleRate = AudioDeviceManager.getSampleRate(deviceID)
+        channelCount = AudioDeviceManager.getChannelCount(deviceID)
+        isHDMI = AudioDeviceManager.isHDMI(deviceID)
+        isInput = AudioDeviceManager.getStreamCount(deviceID: deviceID, scope: kAudioDevicePropertyScopeInput) > 0
+        isOutput = AudioDeviceManager.getStreamCount(deviceID: deviceID, scope: kAudioDevicePropertyScopeOutput) > 0
+    }
+
+    // MARK: Public
+
     public let id: AudioDeviceID
     public let name: String
     public let uid: String
@@ -464,42 +491,24 @@ public struct AudioDeviceInfo: Codable, Identifiable {
     public let isInput: Bool
     public let isOutput: Bool
 
-    public init?(deviceID: AudioDeviceID) {
-        self.id = deviceID
-
-        guard let name = AudioDeviceManager.getName(deviceID),
-              let uid = AudioDeviceManager.getUID(deviceID) else {
-            return nil
-        }
-
-        self.name = name
-        self.uid = uid
-        self.transportType = AudioDeviceManager.getTransportType(deviceID) ?? 0
-        self.sampleRate = AudioDeviceManager.getSampleRate(deviceID)
-        self.channelCount = AudioDeviceManager.getChannelCount(deviceID)
-        self.isHDMI = AudioDeviceManager.isHDMI(deviceID)
-        self.isInput = AudioDeviceManager.getStreamCount(deviceID: deviceID, scope: kAudioDevicePropertyScopeInput) > 0
-        self.isOutput = AudioDeviceManager.getStreamCount(deviceID: deviceID, scope: kAudioDevicePropertyScopeOutput) > 0
-    }
-
     public var transportTypeName: String {
         switch transportType {
         case kAudioDeviceTransportTypeBuiltIn:
-            return "Built-in"
+            "Built-in"
         case kAudioDeviceTransportTypeHDMI:
-            return "HDMI"
+            "HDMI"
         case kAudioDeviceTransportTypeDisplayPort:
-            return "DisplayPort"
+            "DisplayPort"
         case kAudioDeviceTransportTypeUSB:
-            return "USB"
+            "USB"
         case kAudioDeviceTransportTypeBluetooth:
-            return "Bluetooth"
+            "Bluetooth"
         case kAudioDeviceTransportTypeAirPlay:
-            return "AirPlay"
+            "AirPlay"
         case kAudioDeviceTransportTypeVirtual:
-            return "Virtual"
+            "Virtual"
         default:
-            return "Unknown"
+            "Unknown"
         }
     }
 }

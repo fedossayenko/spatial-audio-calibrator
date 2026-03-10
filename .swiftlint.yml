@@ -1,5 +1,6 @@
 # SwiftLint Configuration for Spatial Audio Calibrator
 # https://github.com/realm/SwiftLint
+# Optimized for Swift 6 strict concurrency (March 2026)
 
 # Paths to include during linting
 included:
@@ -27,7 +28,7 @@ disabled_rules:
   - indentation_width  # Handled by SwiftFormat
   - implicit_optional_initialization  # Explicit nil is clearer
   - vertical_whitespace_between_cases  # Compact switch cases are fine
-  - sorted_imports  # Don't enforce import ordering
+  - sorted_imports  # Handled by SwiftFormat
   - file_header  # Don't require file headers
   - file_name  # Don't enforce file naming
   - file_name_no_space  # Allow spaces in filenames
@@ -40,34 +41,33 @@ disabled_rules:
 
 # Enable opt-in rules
 opt_in_rules:
+  # Performance rules
   - array_init
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - first_where
+  - flatmap_over_map_reduce
+  - last_where
+  - reduce_into
+  - sorted_first_last
+
+  # Code quality rules
   - attributes
   - closure_body_length
   - closure_end_indentation
   - closure_spacing
   - collection_alignment
-  - contains_over_filter_count
-  - contains_over_filter_is_empty
-  - contains_over_first_not_nil
-  - contains_over_range_nil_comparison
   - discouraged_none_name
   - discouraged_object_literal
-  - empty_collection_literal
-  - empty_count
-  - empty_string
-  - enum_case_associated_values_count
   - explicit_init
   - fallthrough
   - fatal_error_message
-  - first_where
-  - flatmap_over_map_reduce
-  - function_default_parameter_at_end
-  - ibinspectable_in_extension
-  - identical_operands
-  - implicit_return
-  - implicitly_unwrapped_optional
   - joined_default_parameter
-  - last_where
   - legacy_multiple
   - legacy_objc_type
   - let_var_whitespace
@@ -78,47 +78,40 @@ opt_in_rules:
   - multiline_function_chains
   - multiline_literal_brackets
   - multiline_parameters
-  - nimble_operator
-  - no_extension_access_modifier
-  - no_grouping_extension
-  - nslocalizedstring_key
-  - nslocalizedstring_require_bundle
   - operator_usage_whitespace
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
   - prefer_self_type_over_type_of_self
   - prefer_zero_over_explicit_init
-  - private_action
-  - private_outlet
-  - prohibited_interface_builder
   - prohibited_super_call
-  - quick_discouraged_call
-  - quick_discouraged_focused_test
-  - quick_discouraged_pending_test
-  - reduce_into
   - redundant_nil_coalescing
   - redundant_type_annotation
   - return_value_from_void_function
-  - shorthand_operator
-  - single_test_class
-  - sorted_first_last
   - static_operator
   - strict_fileprivate
   - switch_case_alignment
-  - switch_case_on_newline
   - toggle_bool
   - trailing_closure
-  - unavailable_function
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
   - untyped_error_in_catch
   - vertical_parameter_alignment_on_call
-  - vertical_whitespace_closing_braces
-  - vertical_whitespace_opening_braces
   - weak_delegate
-  - xct_specific_matcher
   - yoda_condition
+
+  # Swift 6 Concurrency rules (NEW for 2026)
+  - async_without_await
+  # Note: incompatible_concurrency_annotation is disabled as we use @preconcurrency import
+
+  # Testing rules
+  - balanced_xctest_lifecycle
+  - single_test_class
+  - xct_specific_matcher
+
+  # Accessibility rules
+  - nslocalizedstring_key
+  - nslocalizedstring_require_bundle
 
 # Analyzer rules (run with `swiftlint analyze`)
 analyzer_rules:
@@ -127,8 +120,8 @@ analyzer_rules:
   - unused_declaration
 
 # Configurable rule settings
-force_cast: warning
-force_try: warning
+force_cast: error  # Was warning, now error
+force_try: error    # Was warning, now error
 
 type_body_length:
   warning: 400
@@ -146,6 +139,11 @@ nesting:
   type_level:
     warning: 2
     error: 3
+
+# Closure body length (new in 2026)
+closure_body_length:
+  warning: 30
+  error: 50
 
 # Custom rules
 custom_rules:
@@ -166,8 +164,23 @@ custom_rules:
     message: "Use logging system instead of debugPrint"
     severity: warning
 
-# Reporter format (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)
-reporter: "xcode"
+  # Swift 6 concurrency best practices
+  avoid_global_actor_isolation:
+    included: ".*\\.swift"
+    name: "Avoid global actor isolation"
+    regex: "@MainActor\\s+(class|struct|actor|enum)"
+    message: "Consider using @MainActor on individual methods instead of entire types for better concurrency"
+    severity: warning
 
-# Fail on warnings in CI
-strict: false
+  prefer_task_local:
+    included: ".*\\.swift"
+    name: "Prefer TaskLocal for context"
+    regex: "Thread\\.current"
+    message: "Prefer TaskLocal values over Thread.current for Swift concurrency"
+    severity: warning
+
+# Reporter format (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)
+reporter: "github-actions-logging"
+
+# Fail on warnings in CI (stricter for 2026)
+strict: true

@@ -31,6 +31,50 @@ public enum CalibrationState: Equatable {
     /// An error occurred during calibration
     case error(CalibrationError)
 
+    // MARK: Public
+
+    /// Whether calibration is currently in progress
+    public var isActive: Bool {
+        switch self {
+        case .idle, .ready, .completed, .error:
+            false
+        case .initializing, .verifying, .measuring, .processing:
+            true
+        }
+    }
+
+    /// Current speaker being measured or processed, if any
+    public var currentSpeaker: SpeakerChannel? {
+        switch self {
+        case let .measuring(speaker), let .processing(speaker):
+            speaker
+        default:
+            nil
+        }
+    }
+
+    /// User-friendly description of current state
+    public var description: String {
+        switch self {
+        case .idle:
+            "Ready to begin calibration"
+        case .initializing:
+            "Initializing audio system..."
+        case .verifying:
+            "Verifying configuration..."
+        case .ready:
+            "System ready for calibration"
+        case let .measuring(speaker):
+            "Measuring \(speaker.displayName)..."
+        case let .processing(speaker):
+            "Processing \(speaker.displayName)..."
+        case .completed:
+            "Calibration complete"
+        case let .error(error):
+            "Error: \(error.localizedDescription)"
+        }
+    }
+
     // MARK: - Equatable Conformance
 
     public static func == (lhs: CalibrationState, rhs: CalibrationState) -> Bool {
@@ -40,65 +84,37 @@ public enum CalibrationState: Equatable {
              (.verifying, .verifying),
              (.ready, .ready),
              (.completed, .completed):
-            return true
+            true
         case let (.measuring(l), .measuring(r)):
-            return l == r
+            l == r
         case let (.processing(l), .processing(r)):
-            return l == r
+            l == r
         case let (.error(l), .error(r)):
-            return l.errorDescription == r.errorDescription
+            l.errorDescription == r.errorDescription
         default:
-            return false
-        }
-    }
-
-    // MARK: - Properties
-
-    /// Whether calibration is currently in progress
-    public var isActive: Bool {
-        switch self {
-        case .idle, .ready, .completed, .error:
-            return false
-        case .initializing, .verifying, .measuring, .processing:
-            return true
-        }
-    }
-
-    /// Current speaker being measured or processed, if any
-    public var currentSpeaker: SpeakerChannel? {
-        switch self {
-        case .measuring(let speaker), .processing(let speaker):
-            return speaker
-        default:
-            return nil
-        }
-    }
-
-    /// User-friendly description of current state
-    public var description: String {
-        switch self {
-        case .idle:
-            return "Ready to begin calibration"
-        case .initializing:
-            return "Initializing audio system..."
-        case .verifying:
-            return "Verifying configuration..."
-        case .ready:
-            return "System ready for calibration"
-        case .measuring(let speaker):
-            return "Measuring \(speaker.displayName)..."
-        case .processing(let speaker):
-            return "Processing \(speaker.displayName)..."
-        case .completed:
-            return "Calibration complete"
-        case .error(let error):
-            return "Error: \(error.localizedDescription)"
+            false
         }
     }
 }
 
 /// Progress information for the overall calibration session
 public struct CalibrationProgress: Equatable {
+    // MARK: Lifecycle
+
+    public init(
+        currentSpeakerIndex: Int,
+        totalSpeakers: Int,
+        currentSpeaker: SpeakerChannel,
+        measurementProgress: Double = 0
+    ) {
+        self.currentSpeakerIndex = currentSpeakerIndex
+        self.totalSpeakers = totalSpeakers
+        self.currentSpeaker = currentSpeaker
+        self.measurementProgress = measurementProgress
+    }
+
+    // MARK: Public
+
     /// Index of current speaker (0-based)
     public let currentSpeakerIndex: Int
 
@@ -116,17 +132,5 @@ public struct CalibrationProgress: Equatable {
         let baseProgress = Double(currentSpeakerIndex) / Double(totalSpeakers)
         let speakerContribution = measurementProgress / Double(totalSpeakers)
         return baseProgress + speakerContribution
-    }
-
-    public init(
-        currentSpeakerIndex: Int,
-        totalSpeakers: Int,
-        currentSpeaker: SpeakerChannel,
-        measurementProgress: Double = 0
-    ) {
-        self.currentSpeakerIndex = currentSpeakerIndex
-        self.totalSpeakers = totalSpeakers
-        self.currentSpeaker = currentSpeaker
-        self.measurementProgress = measurementProgress
     }
 }

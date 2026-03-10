@@ -6,23 +6,7 @@ import Foundation
 /// This class provides forward and inverse FFT operations using
 /// Apple's Accelerate framework for optimal performance on Apple Silicon.
 public final class FFTProcessor {
-
-    // MARK: - Properties
-
-    /// FFT size (must be power of 2)
-    public let fftSize: Int
-
-    /// DFT setup for forward transform
-    private var forwardSetup: OpaquePointer!
-
-    /// DFT setup for inverse transform
-    private var inverseSetup: OpaquePointer!
-
-    // Pre-allocated buffers
-    private var realInput: [Float]
-    private var imagInput: [Float]
-    private var realOutput: [Float]
-    private var imagOutput: [Float]
+    // MARK: Lifecycle
 
     // MARK: - Initialization
 
@@ -45,30 +29,39 @@ public final class FFTProcessor {
         imagOutput = [Float](repeating: 0, count: fftSize)
 
         // Create DFT setups
-        guard let fwdSetup = vDSP_DFT_zop_CreateSetup(
-            nil,
-            vDSP_Length(fftSize),
-            .FORWARD
-        ) else {
+        guard
+            let fwdSetup = vDSP_DFT_zop_CreateSetup(
+                nil,
+                vDSP_Length(fftSize),
+                .FORWARD
+            )
+        else {
             throw CalibrationError.processingFailed("Failed to create forward DFT setup")
         }
-        self.forwardSetup = fwdSetup
+        forwardSetup = fwdSetup
 
-        guard let invSetup = vDSP_DFT_zop_CreateSetup(
-            nil,
-            vDSP_Length(fftSize),
-            .INVERSE
-        ) else {
+        guard
+            let invSetup = vDSP_DFT_zop_CreateSetup(
+                nil,
+                vDSP_Length(fftSize),
+                .INVERSE
+            )
+        else {
             vDSP_DFT_DestroySetup(forwardSetup)
             throw CalibrationError.processingFailed("Failed to create inverse DFT setup")
         }
-        self.inverseSetup = invSetup
+        inverseSetup = invSetup
     }
 
     deinit {
         vDSP_DFT_DestroySetup(forwardSetup)
         vDSP_DFT_DestroySetup(inverseSetup)
     }
+
+    // MARK: Public
+
+    /// FFT size (must be power of 2)
+    public let fftSize: Int
 
     // MARK: - Forward FFT
 
@@ -83,7 +76,7 @@ public final class FFTProcessor {
         vDSP_vclr(&imagInput, 1, vDSP_Length(fftSize))
 
         // Copy input to real part
-        for i in 0..<count {
+        for i in 0 ..< count {
             realInput[i] = input[i]
         }
 
@@ -118,10 +111,10 @@ public final class FFTProcessor {
         vDSP_vclr(&realOutput, 1, vDSP_Length(fftSize))
         vDSP_vclr(&imagOutput, 1, vDSP_Length(fftSize))
 
-        for i in 0..<min(real.count, fftSize) {
+        for i in 0 ..< min(real.count, fftSize) {
             realOutput[i] = real[i]
         }
-        for i in 0..<min(imag.count, fftSize) {
+        for i in 0 ..< min(imag.count, fftSize) {
             imagOutput[i] = imag[i]
         }
 
@@ -150,9 +143,10 @@ public final class FFTProcessor {
         realCopy.withUnsafeMutableBufferPointer { realPtr in
             imagCopy.withUnsafeMutableBufferPointer { imagPtr in
                 magnitude.withUnsafeMutableBufferPointer { magPtr in
-                    guard let realBase = realPtr.baseAddress,
-                          let imagBase = imagPtr.baseAddress,
-                          let magBase = magPtr.baseAddress else { return }
+                    guard
+                        let realBase = realPtr.baseAddress,
+                        let imagBase = imagPtr.baseAddress,
+                        let magBase = magPtr.baseAddress else { return }
 
                     var splitComplex = DSPSplitComplex(
                         realp: realBase,
@@ -177,9 +171,10 @@ public final class FFTProcessor {
         realCopy.withUnsafeMutableBufferPointer { realPtr in
             imagCopy.withUnsafeMutableBufferPointer { imagPtr in
                 phase.withUnsafeMutableBufferPointer { phasePtr in
-                    guard let realBase = realPtr.baseAddress,
-                          let imagBase = imagPtr.baseAddress,
-                          let phaseBase = phasePtr.baseAddress else { return }
+                    guard
+                        let realBase = realPtr.baseAddress,
+                        let imagBase = imagPtr.baseAddress,
+                        let phaseBase = phasePtr.baseAddress else { return }
 
                     var splitComplex = DSPSplitComplex(
                         realp: realBase,
@@ -193,4 +188,18 @@ public final class FFTProcessor {
 
         return phase
     }
+
+    // MARK: Private
+
+    /// DFT setup for forward transform
+    private var forwardSetup: OpaquePointer!
+
+    /// DFT setup for inverse transform
+    private var inverseSetup: OpaquePointer!
+
+    // Pre-allocated buffers
+    private var realInput: [Float]
+    private var imagInput: [Float]
+    private var realOutput: [Float]
+    private var imagOutput: [Float]
 }

@@ -5,6 +5,29 @@ import Foundation
 /// The impulse response captures the acoustic characteristics of a speaker
 /// in the room, including direct sound, early reflections, and reverberation.
 public struct ImpulseResponse: Codable, Identifiable {
+    // MARK: Lifecycle
+
+    // MARK: - Initialization
+
+    public init(
+        samples: [Float],
+        sampleRate: Double,
+        fftSize: Int,
+        measurementDate: Date = Date(),
+        speaker: SpeakerChannel,
+        notes: String? = nil
+    ) {
+        id = UUID()
+        self.samples = samples
+        self.sampleRate = sampleRate
+        self.fftSize = fftSize
+        self.measurementDate = measurementDate
+        self.speaker = speaker
+        self.notes = notes
+    }
+
+    // MARK: Public
+
     public let id: UUID
 
     /// Raw audio samples of the impulse response
@@ -25,8 +48,6 @@ public struct ImpulseResponse: Codable, Identifiable {
     /// Optional measurement notes
     public var notes: String?
 
-    // MARK: - Computed Properties
-
     /// Duration of the impulse response in seconds
     public var duration: Double {
         Double(samples.count) / sampleRate
@@ -37,25 +58,6 @@ public struct ImpulseResponse: Codable, Identifiable {
         samples.count
     }
 
-    // MARK: - Initialization
-
-    public init(
-        samples: [Float],
-        sampleRate: Double,
-        fftSize: Int,
-        measurementDate: Date = Date(),
-        speaker: SpeakerChannel,
-        notes: String? = nil
-    ) {
-        self.id = UUID()
-        self.samples = samples
-        self.sampleRate = sampleRate
-        self.fftSize = fftSize
-        self.measurementDate = measurementDate
-        self.speaker = speaker
-        self.notes = notes
-    }
-
     // MARK: - Analysis
 
     /// Calculate acoustic parameters from this impulse response
@@ -64,11 +66,57 @@ public struct ImpulseResponse: Codable, Identifiable {
     }
 
     /// Get frequency response at specified frequencies
+    /// - Parameter frequencies: Array of frequencies to analyze (Hz)
+    /// - Returns: Array of (frequency, magnitude in dB, phase in radians) tuples
     public func frequencyResponse(
         frequencies: [Double]
-    ) -> [(frequency: Double, magnitude: Double, phase: Double)] {
-        // This will be implemented with FFTProcessor
-        fatalError("Not implemented yet - requires FFTProcessor")
+    )
+        -> [(frequency: Double, magnitude: Double, phase: Double)] {
+        // Need enough samples for FFT
+        guard !samples.isEmpty else {
+            return frequencies.map { ($0, -100, 0) }
+        }
+
+        // Calculate FFT size (power of 2, at least as large as samples)
+        let fftSize = MathHelpers.nextPowerOf2(max(samples.count, 1024))
+
+        // Create FFT processor
+        guard let fftProcessor = try? FFTProcessor(fftSize: fftSize) else {
+            return frequencies.map { ($0, -100, 0) }
+        }
+
+        // Zero-pad samples to FFT size
+        let paddedSamples = MathHelpers.zeroPad(samples, targetSize: fftSize)
+
+        // Compute FFT
+        let (real, imag) = fftProcessor.forwardFFT(paddedSamples)
+
+        // Get magnitude and phase
+        let magnitudes = fftProcessor.magnitude(real: real, imag: imag)
+        let phases = fftProcessor.phase(real: real, imag: imag)
+
+        // Calculate bin width
+        let binWidth = sampleRate / Double(fftSize)
+        let nyquist = sampleRate / 2
+
+        // Interpolate to requested frequencies
+        return frequencies.map { freq in
+            // Clamp to valid range
+            guard freq > 0, freq < nyquist else {
+                return (frequency: freq, magnitude: -100, phase: 0)
+            }
+
+            // Find nearest bin
+            let bin = Int(freq / binWidth)
+            guard bin < magnitudes.count else {
+                return (frequency: freq, magnitude: -100, phase: 0)
+            }
+
+            // Convert magnitude to dB
+            let magDB = 20 * log10(max(Double(magnitudes[bin]), 1e-10))
+
+            return (frequency: freq, magnitude: magDB, phase: Double(phases[bin]))
+        }
     }
 
     /// Calculate energy decay curve (Schroeder backward integration)
@@ -104,7 +152,7 @@ public struct ImpulseResponse: Codable, Identifiable {
 
         // Add small padding for safety
         let end = min(lastSignificantSample + 100, samples.count)
-        let trimmedSamples = Array(samples[0..<end])
+        let trimmedSamples = Array(samples[0 ..< end])
 
         return ImpulseResponse(
             samples: trimmedSamples,
@@ -143,14 +191,7 @@ public struct ImpulseResponse: Codable, Identifiable {
 
 /// Result of a single speaker measurement
 public struct SpeakerMeasurement: Codable, Identifiable {
-    public let id: UUID
-    public let speaker: SpeakerChannel
-    public let impulseResponse: ImpulseResponse
-    public let analysis: AcousticParameters
-    public let recordingDuration: Double
-    public let snr: Double
-    public let isValid: Bool
-    public let validationErrors: [String]
+    // MARK: Lifecycle
 
     public init(
         speaker: SpeakerChannel,
@@ -158,10 +199,10 @@ public struct SpeakerMeasurement: Codable, Identifiable {
         recordingDuration: Double,
         snr: Double
     ) {
-        self.id = UUID()
+        id = UUID()
         self.speaker = speaker
         self.impulseResponse = impulseResponse
-        self.analysis = impulseResponse.analyze()
+        analysis = impulseResponse.analyze()
         self.recordingDuration = recordingDuration
         self.snr = snr
 
@@ -180,7 +221,18 @@ public struct SpeakerMeasurement: Codable, Identifiable {
             errors.append("Abnormal RT60: \(String(format: "%.2f", analysis.rt60))s")
         }
 
-        self.isValid = errors.isEmpty
-        self.validationErrors = errors
+        isValid = errors.isEmpty
+        validationErrors = errors
     }
+
+    // MARK: Public
+
+    public let id: UUID
+    public let speaker: SpeakerChannel
+    public let impulseResponse: ImpulseResponse
+    public let analysis: AcousticParameters
+    public let recordingDuration: Double
+    public let snr: Double
+    public let isValid: Bool
+    public let validationErrors: [String]
 }

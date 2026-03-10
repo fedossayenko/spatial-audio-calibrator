@@ -1,5 +1,5 @@
 import AVFAudio
-import Combine
+@preconcurrency import Combine
 import Foundation
 
 /// Main orchestrator for the acoustic calibration process.
@@ -11,6 +11,27 @@ import Foundation
 /// - Results aggregation and export
 @MainActor
 public final class AudioCalibrator: ObservableObject {
+    // MARK: Lifecycle
+
+    // MARK: - Initialization
+
+    public init(config: CalibrationConfig = .default) {
+        self.config = config
+        deconvolutionEngine = DeconvolutionEngine(
+            fftSize: config.fftSize,
+            regularizationThreshold: config.regularizationDB
+        )
+        sweepGenerator = SweepGenerator(
+            startFrequency: config.startFrequency,
+            endFrequency: config.endFrequency,
+            duration: config.sweepDuration,
+            sampleRate: config.sampleRate,
+            amplitude: config.outputAmplitude
+        )
+    }
+
+    // MARK: Public
+
     // MARK: - Published Properties
 
     /// Current calibration state
@@ -38,33 +59,10 @@ public final class AudioCalibrator: ObservableObject {
     /// Completed measurements
     public private(set) var measurements: [SpeakerMeasurement] = []
 
-    // MARK: - Private Properties
-
-    private var audioEngine: AudioEngine?
-    private var deconvolutionEngine: DeconvolutionEngine
-    private var sweepGenerator: SweepGenerator
-
-    // MARK: - Initialization
-
-    public init(config: CalibrationConfig = .default) {
-        self.config = config
-        self.deconvolutionEngine = DeconvolutionEngine(
-            fftSize: config.fftSize,
-            regularizationThreshold: config.regularizationDB
-        )
-        self.sweepGenerator = SweepGenerator(
-            startFrequency: config.startFrequency,
-            endFrequency: config.endFrequency,
-            duration: config.sweepDuration,
-            sampleRate: config.sampleRate,
-            amplitude: config.outputAmplitude
-        )
-    }
-
     // MARK: - System Verification
 
     /// Verify system configuration and return status
-    public func verifySystemConfiguration() async throws -> SystemStatus {
+    public func verifySystemConfiguration() throws -> SystemStatus {
         state = .verifying
 
         do {
@@ -76,7 +74,7 @@ public final class AudioCalibrator: ObservableObject {
             let outputDevice = outputDeviceID.flatMap { AudioDeviceInfo(deviceID: $0) }
 
             // Check microphone access
-            let microphoneAccess = await checkMicrophoneAccess()
+            let microphoneAccess = checkMicrophoneAccess()
 
             // Get latency info
             var latencySamples: UInt32 = 0
@@ -107,14 +105,6 @@ public final class AudioCalibrator: ObservableObject {
         }
     }
 
-    private func checkMicrophoneAccess() async -> Bool {
-        // On macOS, check if we can access input node
-        // Permission is requested when we try to use the microphone
-        let inputNode = AVAudioEngine().inputNode
-        let format = inputNode.outputFormat(forBus: 0)
-        return format.sampleRate > 0
-    }
-
     // MARK: - Calibration
 
     /// Start full calibration sequence
@@ -128,7 +118,7 @@ public final class AudioCalibrator: ObservableObject {
 
         do {
             // Initialize audio engine
-            try await initializeEngine()
+            try initializeEngine()
 
             // Measure each speaker in order
             for (index, speaker) in SpeakerChannel.measurementOrder.enumerated() {
@@ -151,21 +141,6 @@ public final class AudioCalibrator: ObservableObject {
             state = .error(self.error!)
             throw error
         }
-    }
-
-    private func initializeEngine() async throws {
-        state = .initializing
-
-        // Find output device
-        guard let deviceID = AudioDeviceManager.findHDMIDevice() ?? AudioDeviceManager.getDefaultOutputDevice() else {
-            throw CalibrationError.noHDMIDevice
-        }
-
-        // Configure 5.1 output
-        AudioDeviceManager.configure51Surround(deviceID)
-
-        // Create audio engine
-        audioEngine = try AudioEngine(outputDeviceID: deviceID)
     }
 
     /// Measure a single speaker
@@ -206,7 +181,7 @@ public final class AudioCalibrator: ObservableObject {
         let compensatedRecording = engine.compensateLatency(recording)
 
         // Extract impulse response
-        let impulseResponse = try await deconvolutionEngine.extractImpulseResponse(
+        let impulseResponse = try deconvolutionEngine.extractImpulseResponse(
             excitation: excitation,
             recording: compensatedRecording,
             sampleRate: config.sampleRate,
@@ -223,14 +198,12 @@ public final class AudioCalibrator: ObservableObject {
         }
 
         // Create measurement result
-        let measurement = SpeakerMeasurement(
+        return SpeakerMeasurement(
             speaker: speaker,
             impulseResponse: impulseResponse,
             recordingDuration: totalDuration,
             snr: impulseResponse.analyze().signalToNoiseRatio
         )
-
-        return measurement
     }
 
     /// Stop current calibration
@@ -245,7 +218,7 @@ public final class AudioCalibrator: ObservableObject {
     // MARK: - Export
 
     /// Export results to specified directory
-    public func exportResults(to url: URL) async throws {
+    public func exportResults(to url: URL) throws {
         guard !measurements.isEmpty else {
             throw CalibrationError.exportFailed("No measurements to export")
         }
@@ -286,12 +259,49 @@ public final class AudioCalibrator: ObservableObject {
             ]
         }
 
-        let analysisData = try JSONSerialization.data(withJSONObject: analysisDict, options: [.prettyPrinted, .sortedKeys])
+        let analysisData = try JSONSerialization.data(
+            withJSONObject: analysisDict,
+            options: [.prettyPrinted, .sortedKeys]
+        )
         try analysisData.write(to: analysisURL)
 
         // Export config
         let configURL = exportDir.appendingPathComponent("config.json")
         let configData = try encoder.encode(config)
         try configData.write(to: configURL)
+    }
+
+    // MARK: Private
+
+    // MARK: - Private Properties
+
+    private var audioEngine: AudioEngine?
+    private var deconvolutionEngine: DeconvolutionEngine
+    private var sweepGenerator: SweepGenerator
+
+    private func checkMicrophoneAccess() -> Bool {
+        // Check actual microphone permission status
+        let permission = AVAudioApplication.shared.recordPermission
+        guard permission == .granted else {
+            return false
+        }
+
+        // Also verify input devices are available
+        return !AudioDeviceManager.getInputDevices().isEmpty
+    }
+
+    private func initializeEngine() throws {
+        state = .initializing
+
+        // Find output device
+        guard let deviceID = AudioDeviceManager.findHDMIDevice() ?? AudioDeviceManager.getDefaultOutputDevice() else {
+            throw CalibrationError.noHDMIDevice
+        }
+
+        // Configure 5.1 output
+        AudioDeviceManager.configure51Surround(deviceID)
+
+        // Create audio engine
+        audioEngine = try AudioEngine(outputDeviceID: deviceID)
     }
 }

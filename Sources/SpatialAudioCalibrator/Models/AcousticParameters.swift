@@ -1,5 +1,5 @@
-import Foundation
 import Accelerate
+import Foundation
 
 /// Acoustic measurements derived from an impulse response.
 ///
@@ -99,12 +99,12 @@ public struct AcousticParameters: Codable {
 
         // EDT: Early Decay Time (extrapolate from -10 dB)
         let decay10Sample = normalizedEnergy.firstIndex { $0 < -10 } ?? energy.count
-        let edt = Double(decay10Sample) / sampleRate * 6  // Extrapolate to 60 dB
+        let edt = Double(decay10Sample) / sampleRate * 6 // Extrapolate to 60 dB
 
         // ITDG: Initial Time Delay Gap
         // Find first significant reflection after direct sound
         var itdg = 0.0
-        for i in 1..<min(1000, Int(sampleRate * 0.1)) {
+        for i in 1 ..< min(1000, Int(sampleRate * 0.1)) {
             let reflectionEnergy = energy[i]
             if reflectionEnergy > 0.01 * energy[0] {
                 itdg = Double(i) * samplePeriod * 1000.0
@@ -114,13 +114,13 @@ public struct AcousticParameters: Codable {
 
         // C80 Clarity
         let t80Sample = Int(0.08 * sampleRate)
-        let early80Energy = energy[0..<t80Sample].reduce(0, +)
+        let early80Energy = energy[0 ..< t80Sample].reduce(0, +)
         let late80Energy = energy[t80Sample...].reduce(0, +)
         let c80 = late80Energy > 0 ? 10 * log10(early80Energy / late80Energy) : 2.0
 
         // C50 Clarity
         let t50Sample = Int(0.05 * sampleRate)
-        let early50Energy = energy[0..<t50Sample].reduce(0, +)
+        let early50Energy = energy[0 ..< t50Sample].reduce(0, +)
         let late50Energy = energy[t50Sample...].reduce(0, +)
         let c50 = late50Energy > 0 ? 10 * log10(early50Energy / late50Energy) : 2.0
 

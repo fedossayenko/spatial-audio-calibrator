@@ -1,10 +1,11 @@
-import Foundation
-
 import Accelerate
 import AVFAudio
+import Foundation
 
 /// Exports audio samples as WAV files.
 public enum WAVEExporter {
+    // MARK: Public
+
     /// Export audio samples as a 32-bit float WAV file
     public static func export(samples: [Float], sampleRate: Double, to url: URL) throws {
         let fileManager = FileManager.default
@@ -18,6 +19,8 @@ public enum WAVEExporter {
         let data = try createWAVData(samples: samples, sampleRate: sampleRate)
         try data.write(to: url)
     }
+
+    // MARK: Private
 
     private static func createWAVData(samples: [Float], sampleRate: Double) throws -> Data {
         var data = Data()
@@ -37,7 +40,7 @@ public enum WAVEExporter {
         // fmt chunk
         data.append(contentsOf: "fmt ".utf8)
         data.append(contentsOf: withUnsafeBytes(of: UInt32(16)) { Array($0) }) // Chunk size
-        data.append(contentsOf: withUnsafeBytes(of: UInt16(3)) { Array($0) })  // Audio format (3 = IEEE float)
+        data.append(contentsOf: withUnsafeBytes(of: UInt16(3)) { Array($0) }) // Audio format (3 = IEEE float)
         data.append(contentsOf: withUnsafeBytes(of: numChannels) { Array($0) })
         data.append(contentsOf: withUnsafeBytes(of: sampleRateValue) { Array($0) })
         data.append(contentsOf: withUnsafeBytes(of: byteRate) { Array($0) })

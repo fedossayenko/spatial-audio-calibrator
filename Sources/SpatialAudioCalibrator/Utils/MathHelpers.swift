@@ -50,14 +50,14 @@ public enum MathHelpers {
     public static func zeroPad(_ input: [Float], targetSize: Int) -> [Float] {
         var output = [Float](repeating: 0, count: targetSize)
         let copyCount = min(input.count, targetSize)
-        output[0..<copyCount] = input[0..<copyCount]
+        output[0 ..< copyCount] = input[0 ..< copyCount]
         return output
     }
 
     /// Generate a Hamming window of specified length
     public static func hammingWindow(length: Int) -> [Float] {
         guard length > 0 else { return [] }
-        return (0..<length).map { i in
+        return (0 ..< length).map { i in
             Float(0.54 - 0.46 * cos(2.0 * Double.pi * Double(i) / Double(length - 1)))
         }
     }
@@ -65,7 +65,7 @@ public enum MathHelpers {
     /// Generate a Hann window of specified length
     public static func hannWindow(length: Int) -> [Float] {
         guard length > 0 else { return [] }
-        return (0..<length).map { i in
+        return (0 ..< length).map { i in
             Float(0.5 * (1.0 - cos(2.0 * Double.pi * Double(i) / Double(length - 1))))
         }
     }

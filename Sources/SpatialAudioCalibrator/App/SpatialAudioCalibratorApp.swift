@@ -7,14 +7,15 @@ import Foundation
 /// using logarithmic sine sweeps and spectral deconvolution.
 @main
 public struct SpatialAudioCalibratorApp {
+    // MARK: Public
 
-    public static func main() async {
+    public static func main() {
         print("Spatial Audio Calibrator v1.0.0")
         print("================================\n")
 
         do {
             // List available devices
-            await listDevices()
+            listDevices()
 
             // Run system check
             print("\nSystem Verification")
@@ -23,7 +24,7 @@ public struct SpatialAudioCalibratorApp {
             let calibrator = AudioCalibrator(config: .default)
 
             do {
-                let status = try await calibrator.verifySystemConfiguration()
+                let status = try calibrator.verifySystemConfiguration()
 
                 print("Output Device: \(status.outputDevice?.name ?? "Not found")")
                 print("HDMI Connected: \(status.hasHDMI ? "Yes" : "No")")
@@ -52,7 +53,9 @@ public struct SpatialAudioCalibratorApp {
         }
     }
 
-    private static func listDevices() async {
+    // MARK: Private
+
+    private static func listDevices() {
         print("Available Audio Devices")
         print("-----------------------\n")
 
