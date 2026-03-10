@@ -9,7 +9,7 @@ import Foundation
 /// - Channel mapping for speaker isolation
 /// - Sweep signal playback
 /// - Microphone input recording
-public final class AudioEngine {
+public final class AudioEngine: AudioEngineProtocol {
     // MARK: Lifecycle
 
     // MARK: - Initialization

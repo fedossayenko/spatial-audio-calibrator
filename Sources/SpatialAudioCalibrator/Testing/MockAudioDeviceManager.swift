@@ -218,20 +218,28 @@ public final class MockAudioDeviceManager: AudioDeviceManaging, @unchecked Senda
     }
 }
 
-/// Extension to make BufferConfiguration more testable
-public extension BufferConfiguration {
-    /// Create a buffer configuration for testing
+/// Extension to make AudioDeviceInfo more testable with protocol-based device managers
+public extension AudioDeviceInfo {
+    /// Create device info with explicit values (for testing and protocol-based usage)
     init(
-        bufferSize: UInt32,
-        safetyOffsetOutput: UInt32,
-        safetyOffsetInput: UInt32,
-        streamLatencyOutput: UInt32,
-        streamLatencyInput: UInt32
+        deviceID: AudioDeviceID,
+        name: String,
+        uid: String,
+        transportType: UInt32,
+        sampleRate: Double?,
+        channelCount: UInt32?,
+        isHDMI: Bool,
+        isInput: Bool,
+        isOutput: Bool
     ) {
-        self.bufferSize = bufferSize
-        self.safetyOffsetOutput = safetyOffsetOutput
-        self.safetyOffsetInput = safetyOffsetInput
-        self.streamLatencyOutput = streamLatencyOutput
-        self.streamLatencyInput = streamLatencyInput
+        id = deviceID
+        self.name = name
+        self.uid = uid
+        self.transportType = transportType
+        self.sampleRate = sampleRate
+        self.channelCount = channelCount
+        self.isHDMI = isHDMI
+        self.isInput = isInput
+        self.isOutput = isOutput
     }
 }

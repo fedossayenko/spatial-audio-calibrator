@@ -21,11 +21,6 @@ let package = Package(
             dependencies: [],
             path: "Sources/SpatialAudioCalibrator",
             swiftSettings: [
-                // Swift 6 strict concurrency
-                .enableUpcomingFeature("StrictConcurrency"),
-                // Enable all Swift 6.0 features
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalConcurrency"),
                 // Enable experimental features for better concurrency
                 .enableExperimentalFeature("Span"),
                 // Warning as error for strict quality
@@ -35,13 +30,7 @@ let package = Package(
         .testTarget(
             name: "SpatialAudioCalibratorTests",
             dependencies: ["SpatialAudioCalibrator"],
-            path: "Tests/SpatialAudioCalibratorTests",
-            swiftSettings: [
-                // Swift 6 strict concurrency for tests too
-                .enableUpcomingFeature("StrictConcurrency"),
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalConcurrency"),
-            ]
+            path: "Tests/SpatialAudioCalibratorTests"
         ),
     ],
     swiftLanguageVersions: [.v6]

@@ -5,7 +5,10 @@ import Foundation
 ///
 /// This abstraction enables testing without real audio hardware.
 /// The production implementation uses AVAudioEngine, while tests can use mocks.
-public protocol AudioEngineProtocol: AnyObject, Sendable {
+///
+/// - Note: This protocol intentionally does not require Sendable conformance
+///   because AVAudioEngine is not Sendable and must be used from a single thread/queue.
+public protocol AudioEngineProtocol: AnyObject {
     // MARK: - Lifecycle
 
     /// Initialize the engine with an optional output device
